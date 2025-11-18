@@ -1,0 +1,4 @@
+2025-10-21T10:17:22.978 INFO [Bevywise:py_mqtt_client.py:<module>] - Starting Bevywise IoTSimulator..
+2025-10-21T10:17:43.934 ERROR [Bevywise:JsonUpdatedMenu.py:updatesimSettings] - 1720:no such table: bevy_health_care_settings
+2025-10-21T10:22:34.901 INFO [Bevywise:py_mqtt_client.py:<module>] - Starting Bevywise IoTSimulator..
+2025-10-21T10:22:42.609 ERROR [Bevywise:JsonUpdatedMenu.py:updatesimSettings] - 1720:no such table: bevy_health_care_settings

@@ -1,0 +1,4 @@
+2025-10-21T10:37:52.100 INFO [Bevywise:py_mqtt_client.py:<module>] - Starting Bevywise IoTSimulator..
+2025-10-21T10:38:02.526 ERROR [Bevywise:JsonUpdatedMenu.py:updatesimSettings] - 1720:no such table: bevy_health_care_settings
+2025-10-21T10:38:49.748 INFO [Bevywise:py_mqtt_client.py:<module>] - Starting Bevywise IoTSimulator..
+2025-10-21T10:48:51.830 ERROR [Bevywise:tornado_handler.py:post] - 418:list index out of range

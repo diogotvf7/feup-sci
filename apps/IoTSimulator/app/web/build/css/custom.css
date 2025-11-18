@@ -1,0 +1,106 @@
+.logo-border {
+margin-right:0;
+border-right:2px solid #e8e8e8;
+padding-right:10px; 
+}
+
+.start-network {
+    color: #dd4b39;
+    font-size: 22px;
+    vertical-align:center;
+    margin: 1px 5px 0px 0px;
+}
+.stop-network {
+    color: #5ecc72;
+    font-size: 22px;
+    vertical-align: center;
+    margin: 1px 5px 0px 0px;
+}
+
+ .blank-text {
+    font-size: 23px;
+    font-weight: 600;
+    line-height: center;
+    color: #222;
+    margin-top: 170px;
+}
+   .main-header > .navbar{
+	   background:#fff;
+   }
+   
+   
+.modal-footer .btn + .btn {
+    margin-left: 10px;
+    margin-bottom: 0;
+}
+.mr7 {
+	    margin-right: 7px !important;
+}
+
+.mt7 {
+	    margin-top: 7px !important;
+}
+
+.mr10 {
+	    margin-right: 10px !important;
+}
+
+.disabled_text{
+	pointer-events:none !important;
+}
+
+.more-dropdown{
+	line-height:15px;
+}
+
+.more-dropdown:hover{
+	background:#f7f7f7;
+}
+
+.more-dropdown:focus{
+	background:#eeeeee;
+}
+
+
+ @media (max-width:1700px) {
+	 
+	.main-header .logo {
+
+    height: 54px !important;
+  
+}
+ }
+ 
+ 
+@media screen and (min-width: 1700px) and (max-width: 2074px)  {
+	
+	.user-panel {
+    margin-top: 73px;
+}
+	
+	.main-header .logo {
+
+    height: 67px !important;
+	
+  
+}	
+
+    .navbar-nav > li > a {
+    line-height: 38px;
+}
+
+}
+
+.Broker li a{
+    color:rgb(9, 9, 20);
+}
+
+.Broker li a:hover {
+    color:rgb(15, 182, 43);
+}
+.Broker li a:first{
+    color:rgb(18, 49, 224);
+}
+ 
+ 
+ 

@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0.1 Safari/605.1.15" version="28.2.8">
+  <diagram id="SmartDamCPS" name="Smart Dam CPS Architecture">
+    <mxGraphModel dx="1077" dy="670" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="perception" value="Perception Layer&lt;br&gt;- Sensors: pressure, flow, rainfall&lt;br&gt;- Actuators: valve, turbine&lt;br&gt;- Edge: ESP32&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;" parent="1" vertex="1">
+          <mxGeometry x="300" y="700" width="400" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="network" value="Network Layer&lt;br&gt;- AMQP&lt;br&gt;- Wi-Fi (prototype) / LoRaWAN (deployment)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" parent="1" vertex="1">
+          <mxGeometry x="300" y="580" width="400" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="middleware" value="&lt;b&gt;Middleware Layer&lt;/b&gt;&lt;br&gt;- Node-RED (flows)&lt;br&gt;- RabbitMQ (AMQP broker)&lt;br&gt;- Weather API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;" parent="1" vertex="1">
+          <mxGeometry x="300" y="460" width="400" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="application" value="&lt;b&gt;Application Layer&lt;/b&gt;&lt;br&gt;- AI/ML Engine&lt;br&gt;- Control Logic&lt;br&gt;- Visualization (Node-RED)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" parent="1" vertex="1">
+          <mxGeometry x="300" y="340" width="400" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="business" value="&lt;b&gt;Business Layer&lt;/b&gt;&lt;br&gt;- Dashboard (Web UI)&lt;br&gt;- Decision Support System" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;" parent="1" vertex="1">
+          <mxGeometry x="300" y="220" width="400" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;" parent="1" source="business" target="application" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;" parent="1" source="application" target="middleware" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;" parent="1" source="middleware" target="network" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#000000;endArrow=block;endFill=1;" parent="1" source="network" target="perception" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

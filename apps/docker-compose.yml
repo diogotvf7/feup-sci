@@ -1,0 +1,54 @@
+version: "3.7"
+
+services:
+  node-red:
+    image: nodered/node-red:latest
+    environment:
+      - TZ=Europe/Amsterdam
+    ports:
+      - "1880:1880"
+    networks:
+      - node-red-net
+    # bind mount a host folder so data persists even if you remove the container/image
+    volumes:
+      - ./node-red-data:/data
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - "1883:1883"   
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: kalo
+      RABBITMQ_DEFAULT_PASS: kalo
+    configs:
+      - source: rabbitmq-plugins
+        target: /etc/rabbitmq/enabled_plugins
+    command: >
+      bash -c "rabbitmq-plugins enable --offline rabbitmq_mqtt &&
+               rabbitmq-server"
+    networks:
+      - node-red-net
+    # bind mount host folders to persist RabbitMQ data and logs
+    volumes:
+      - ./rabbitmq/lib:/var/lib/rabbitmq
+      - ./rabbitmq/rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq/log:/var/log/rabbitmq
+  iot-simulator:
+    build: ./IoTSimulator
+    ports:
+      - "9000:9000"
+      - "12345:12345"
+    volumes:
+      - ./IoTSimulator/data:/app/data
+      - ./IoTSimulator/log:/app/log
+    networks:
+      - node-red-net
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_management]."  
+
+networks:
+  node-red-net:

@@ -1,0 +1,37 @@
+# @Bevywise.com IOT Initiative. All rights reserved 
+# www.bevywise.com Email - support@bevywise.com
+#
+
+###############################################################
+          Complete custom Testing                                      
+###############################################################
+
+# This folder contains libraries which are needed to customize your testing environment. 
+
+  1. libmqttclient.dll
+  2. libmqttclient.lib
+
+For Visual studio projects use the above two files and example BMQ.c.
+
+Directly Execute the example by double click Client_Example.exe
+
+###############################################################
+
+For Secure SSL/TLS communication We provide certificates with Key files in Certificate folder. 
+
+# For your self signed certificates you must follow this. 
+
+  1. Client certificate and Key file MUST be present in ./Certificate/client folder.
+  
+  2. CA Certificate MUST present in ./Certificate/root folder.
+  
+  3. Broker and Client certificates MUST be signed by same CA.
+
+Note: Client key file must not contains passphrase.
+
+TLS Port- 1883 NonTls Port-8883
+
+Use the given example and test the broker. 
+
+#################################################################
+

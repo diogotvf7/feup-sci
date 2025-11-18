@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  iot-simulator:
+    build: .
+    ports:
+      - "9000:9000"
+      - "12345:12345"
+    volumes:
+      - ./data:/app/data
+      - ./log:/app/log
