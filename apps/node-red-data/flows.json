@@ -665,5 +665,15 @@
                 "f0c0b60f467b5a4c"
             ]
         ]
+    },
+    {
+        "id": "ee91ead999b17fcf",
+        "type": "comment",
+        "z": "72c28959539b9464",
+        "name": "",
+        "info": "Fazer query a base de dados para ver que tabelas(kind of sensor) existem e adicionar check boxes ou algo do genero para permitir selecionar os dados",
+        "x": 500,
+        "y": 560,
+        "wires": []
     }
 ]
