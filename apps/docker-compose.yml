@@ -28,7 +28,7 @@ services:
         target: /etc/rabbitmq/enabled_plugins
     command: >
       bash -c "rabbitmq-plugins enable --offline rabbitmq_mqtt &&
-               rabbitmq-server"
+              rabbitmq-server"
     networks:
       - node-red-net
     # bind mount host folders to persist RabbitMQ data and logs
