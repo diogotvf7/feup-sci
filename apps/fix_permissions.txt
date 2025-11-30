@@ -1,0 +1,2 @@
+sudo chmod 400 ./rabbitmq/rabbitmq_data/.erlang.cookie
+sudo chmod -R a+rX influxdb-data/
