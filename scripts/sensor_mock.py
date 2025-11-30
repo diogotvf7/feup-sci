@@ -1,3 +1,5 @@
+# this script simulates two sensor one output for each and sends data to an MQTT broker
+
 import time
 import json
 import random

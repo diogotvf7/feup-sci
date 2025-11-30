@@ -60,8 +60,6 @@ services:
       - INFLUXDB_DB=iot_data
       - INFLUXDB_ADMIN_USER=admin
       - INFLUXDB_ADMIN_PASSWORD=adminpassword
-      - INFLUXDB_USER=node-red-user
-      - INFLUXDB_USER_PASSWORD=noderedpassword
     networks:
       - node-red-net
 configs:
