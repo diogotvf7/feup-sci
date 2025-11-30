@@ -8,6 +8,28 @@
         "env": []
     },
     {
+        "id": "group_logging",
+        "type": "group",
+        "z": "8350cc1f7811e02f",
+        "name": "Data Ingestion & Logging",
+        "style": {
+            "stroke": "#92d04f",
+            "fill": "#e3f3d3",
+            "label": true
+        },
+        "nodes": [
+            "json_parser",
+            "mqtt_in_node",
+            "transform_for_influx",
+            "influxdb_node",
+            "influxdb_stub"
+        ],
+        "x": 374,
+        "y": 59,
+        "w": 992,
+        "h": 162
+    },
+    {
         "id": "cb8de0ba66af2b18",
         "type": "mqtt-broker",
         "name": "rabbitmq",
@@ -39,11 +61,200 @@
         "sessionExpiry": ""
     },
     {
-        "id": "e58533422cfda8b7",
+        "id": "mqtt_broker_config",
+        "type": "mqtt-broker",
+        "name": "Local Mosquitto",
+        "broker": "192.168.3.35",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "influxdb_config_local",
+        "type": "influxdb",
+        "hostname": "influxdb",
+        "port": "8086",
+        "protocol": "http",
+        "database": "sensors_db",
+        "name": "Local InfluxDB",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://influxdb:8086",
+        "timeout": "",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "json_parser",
+        "type": "json",
+        "z": "8350cc1f7811e02f",
+        "g": "group_logging",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 630,
+        "y": 120,
+        "wires": [
+            [
+                "switch_by_kind",
+                "transform_for_influx"
+            ]
+        ]
+    },
+    {
+        "id": "switch_by_kind",
+        "type": "switch",
+        "z": "8350cc1f7811e02f",
+        "name": "Filter by Kind",
+        "property": "payload.kind",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "distance",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "flow_rate",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 3,
+        "x": 470,
+        "y": 280,
+        "wires": [
+            [
+                "distance_logic"
+            ],
+            [
+                "flow_logic"
+            ],
+            [
+                "debug_others"
+            ]
+        ]
+    },
+    {
+        "id": "distance_logic",
+        "type": "function",
+        "z": "8350cc1f7811e02f",
+        "name": "Check Distance < 10",
+        "func": "if (msg.payload.data < 10) {\n    msg.payload = \"ALARM: Object too close! \" + msg.payload.data + \"cm\";\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 240,
+        "wires": [
+            [
+                "debug_distance_alert"
+            ]
+        ]
+    },
+    {
+        "id": "flow_logic",
+        "type": "function",
+        "z": "8350cc1f7811e02f",
+        "name": "Check Flow > 400",
+        "func": "if (msg.payload.data > 400) {\n    msg.payload = \"WARNING: High flow rate detected! \" + msg.payload.data + \"L/h\";\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 300,
+        "wires": [
+            [
+                "debug_flow_alert"
+            ]
+        ]
+    },
+    {
+        "id": "debug_distance_alert",
+        "type": "debug",
+        "z": "8350cc1f7811e02f",
+        "name": "Distance Alert",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "debug_flow_alert",
+        "type": "debug",
+        "z": "8350cc1f7811e02f",
+        "name": "Flow Alert",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "debug_others",
+        "type": "debug",
+        "z": "8350cc1f7811e02f",
+        "name": "Other Sensors",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "mqtt_in_node",
         "type": "mqtt in",
         "z": "8350cc1f7811e02f",
-        "name": "teste",
-        "topic": "test_mqtt",
+        "g": "group_logging",
+        "name": "sensors/#",
+        "topic": "sensors/#",
         "qos": "2",
         "datatype": "auto-detect",
         "broker": "cb8de0ba66af2b18",
@@ -51,33 +262,71 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 170,
-        "y": 540,
+        "x": 460,
+        "y": 120,
         "wires": [
             [
-                "1b165611e5189291"
+                "json_parser"
             ]
         ]
     },
     {
-        "id": "1b165611e5189291",
-        "type": "mqtt out",
+        "id": "transform_for_influx",
+        "type": "function",
         "z": "8350cc1f7811e02f",
-        "name": "out",
-        "topic": "test_mqtt",
-        "qos": "1",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "cb8de0ba66af2b18",
-        "x": 470,
-        "y": 460,
-        "wires": [],
-        "inputLabels": [
-            "fdasf"
+        "g": "group_logging",
+        "name": "Format for InfluxDB",
+        "func": "function ToLocalDate(inDate) {\n    // If your timestamp is in seconds, multiply by 1000\n    // If it is already milliseconds, remove the * 1000\n    return new Date(inDate * 1000);\n}\n\n// 1. Explicitly set measurement to satisfy the node warning\nmsg.measurement = msg.payload.kind;\n\n// 2. Define Payload\nmsg.payload = [\n    {\n        // FIELDS (The actual data columns you want)\n        value: msg.payload.data,\n        timestamp: msg.payload.time_stamp  // <--- ADD THIS BACK to save it as a number\n    },\n    {\n        // TAGS (Metadata for filtering)\n        sensor_id: msg.payload.id,\n        units: msg.payload.units\n    }\n];\n\n// 3. Set the Index Time (Used for the graph X-Axis)\nmsg.timestamp = ToLocalDate(msg.payload.time_stamp);\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 180,
+        "wires": [
+            [
+                "influxdb_stub",
+                "influxdb_node"
+            ]
         ]
+    },
+    {
+        "id": "influxdb_node",
+        "type": "influxdb out",
+        "z": "8350cc1f7811e02f",
+        "g": "group_logging",
+        "influxdb": "influxdb_config_local",
+        "name": "Save to DB",
+        "measurement": "",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "iot_data",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "SCI",
+        "bucket": "iot_data",
+        "x": 1220,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "influxdb_stub",
+        "type": "debug",
+        "z": "8350cc1f7811e02f",
+        "g": "group_logging",
+        "name": "To InfluxDB (Simulated)",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1210,
+        "y": 100,
+        "wires": []
     }
 ]
