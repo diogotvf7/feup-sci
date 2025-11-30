@@ -47,7 +47,7 @@ services:
     networks:
       - node-red-net
   influxdb:
-    image: influxdb:1.8  # Using a common stable version for IoT/Node-RED setups
+    image: influxdb:2  # Using a common stable version for IoT/Node-RED setups
     container_name: influxdb
     restart: always
     ports:

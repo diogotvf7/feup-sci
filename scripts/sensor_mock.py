@@ -19,7 +19,8 @@ simulated_sensors = [
         "kind": "flow_rate",
         "units": "L/hour",
         "min": 100.0,
-        "max": 500.0
+        "max": 500.0,
+        "time_stamp" : 1764501821
     },
     {
         # Distance Sensor 1
@@ -27,7 +28,8 @@ simulated_sensors = [
         "kind": "distance",
         "units": "cm",
         "min": 5.0,
-        "max": 200.0
+        "max": 200.0,
+        "time_stamp" : 1764501821
     },
     {
         # Distance Sensor 2 (To show how we handle same 'kind', different ID)
@@ -35,7 +37,8 @@ simulated_sensors = [
         "kind": "distance",
         "units": "cm",
         "min": 5.0,
-        "max": 200.0
+        "max": 200.0,
+        "time_stamp" : 1764501821
     }
 ]
 
@@ -65,7 +68,8 @@ try:
                 "id": sensor["id"],
                 "kind": sensor["kind"], 
                 "units": sensor["units"],
-                "data": current_val
+                "data": current_val,
+                "time_stamp": int(time.time())
             }
             
             json_payload = json.dumps(payload)
