@@ -276,7 +276,7 @@
         "z": "8350cc1f7811e02f",
         "g": "group_logging",
         "name": "Format for InfluxDB",
-        "func": "function ToLocalDate(inDate) {\n    // If your timestamp is in seconds, multiply by 1000\n    // If it is already milliseconds, remove the * 1000\n    return new Date(inDate * 1000);\n}\n\n// 1. Explicitly set measurement to satisfy the node warning\nmsg.measurement = msg.payload.kind;\n\n// 2. Define Payload\nmsg.payload = [\n    {\n        // FIELDS (The actual data columns you want)\n        value: msg.payload.data,\n        timestamp: msg.payload.time_stamp  // <--- ADD THIS BACK to save it as a number\n    },\n    {\n        // TAGS (Metadata for filtering)\n        sensor_id: msg.payload.id,\n        units: msg.payload.units\n    }\n];\n\n// 3. Set the Index Time (Used for the graph X-Axis)\nmsg.timestamp = ToLocalDate(msg.payload.time_stamp);\n\nreturn msg;",
+        "func": "function ToLocalDate(inDate) {\n    // Convert Unix timestamp (seconds) to JS Date object\n    return new Date(inDate * 1000);\n}\n\n// 1. Set the Measurement Name (e.g., \"distance\")\nmsg.measurement = msg.payload.kind;\n\n// 2. Define Payload [Fields, Tags]\nmsg.payload = [\n    {\n        // FIELDS: This is the ONLY data column being saved now.\n        // We removed 'timestamp' from here.\n        value: msg.payload.data\n    },\n    {\n        // TAGS: Metadata for filtering\n        sensor_id: msg.payload.id,\n        units: msg.payload.units\n    }\n];\n\n// 3. Override the \"Now\" time\n// This tells InfluxDB: \"Don't use the current time, use this specific time instead.\"\nmsg.timestamp = ToLocalDate(msg.payload.time_stamp);\n\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,

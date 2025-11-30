@@ -287,7 +287,6 @@
         "y": 180,
         "wires": [
             [
-                "influxdb_stub",
                 "influxdb_node"
             ]
         ]
@@ -316,7 +315,7 @@
         "type": "debug",
         "z": "8350cc1f7811e02f",
         "g": "group_logging",
-        "name": "To InfluxDB (Simulated)",
+        "name": "To InfluxDB (Debugger)",
         "active": true,
         "tosidebar": true,
         "console": false,
