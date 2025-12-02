@@ -54,7 +54,7 @@ services:
       - "8086:8086" # InfluxDB HTTP API port
     volumes:
       # Mount host folder for persistent storage of the database data
-      - ./influxdb-data:/var/lib/influxdb
+      - ./influxdb-data:/var/lib/influxdb2
     environment:
       # These environment variables are used for initial database setup (optional for 1.x)
       - INFLUXDB_DB=iot_data
