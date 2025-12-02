@@ -36,16 +36,6 @@ services:
       - ./rabbitmq/lib:/var/lib/rabbitmq
       - ./rabbitmq/rabbitmq_data:/var/lib/rabbitmq
       - ./rabbitmq/log:/var/log/rabbitmq
-  iot-simulator:
-    build: ./IoTSimulator
-    ports:
-      - "9000:9000"
-      - "12345:12345"
-    volumes:
-      - ./IoTSimulator/data:/app/data
-      - ./IoTSimulator/log:/app/log
-    networks:
-      - node-red-net
   influxdb:
     image: influxdb:2  # Using a common stable version for IoT/Node-RED setups
     container_name: influxdb
@@ -54,7 +44,8 @@ services:
       - "8086:8086" # InfluxDB HTTP API port
     volumes:
       # Mount host folder for persistent storage of the database data
-      - ./influxdb-data:/var/lib/influxdb2
+      - ./influxdb-data/influxdb:/var/lib/influxdb
+      - ./influxdb-data/influxdb2:/var/lib/influxdb2
     environment:
       # These environment variables are used for initial database setup (optional for 1.x)
       - INFLUXDB_DB=iot_data
