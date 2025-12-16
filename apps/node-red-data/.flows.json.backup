@@ -421,7 +421,8 @@
         "y": 180,
         "wires": [
             [
-                "influxdb_node"
+                "influxdb_node",
+                "influxdb_stub"
             ]
         ]
     },
@@ -450,7 +451,7 @@
         "z": "8350cc1f7811e02f",
         "g": "group_logging",
         "name": "To InfluxDB (Debugger)",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
@@ -492,7 +493,7 @@
         "type": "function",
         "z": "72c28959539b9464",
         "name": "Format Timestamps for Flux",
-        "func": "// Function to convert time strings (e.g., \"1h\", \"30m\") to milliseconds\nfunction presetToMs(preset) {\n  const unit = preset.slice(-1); // m, h, d, w\n  const value = parseInt(preset.slice(0, -1));\n\n  const MS_PER_MINUTE = 60 * 1000;\n  const MS_PER_HOUR = MS_PER_MINUTE * 60;\n  const MS_PER_DAY = MS_PER_HOUR * 24;\n  const MS_PER_WEEK = MS_PER_DAY * 7;\n\n  switch (unit) {\n    case 'm': return value * MS_PER_MINUTE;\n    case 'h': return value * MS_PER_HOUR;\n    case 'd': return value * MS_PER_DAY;\n    case 'w': return value * MS_PER_WEEK;\n    default: return 0;\n  }\n}\n\nlet startTime;\nlet endTime;\nlet presetValue = msg.payload.Preset;\n\n// --- 1. Determine Start and End Times ---\nif (presetValue) {\n  // If a preset is selected, use it.\n  let msDuration = presetToMs(presetValue);\n\n  // End time is always now (current timestamp in milliseconds)\n  let now = Date.now();\n  endTime = now;\n\n  // Start time is calculated: now - duration\n  startTime = now - msDuration;\n\n  // The `datetime-local` input type returns milliseconds, so we use them here.\n} else {\n  // If no preset is selected, use the custom Start/End times from the form.\n  // The ui-form returns epoch milliseconds for 'datetime-local' type.\n  startTime = msg.payload.Start;\n  endTime = msg.payload.End;\n\n  // Optional: Add logic here to require custom fields if no preset is selected.\n  if (!startTime || !endTime) {\n    node.error(\"Please select a time preset or provide both Start and End times.\");\n    return null; // Stop the flow\n  }\n}\n\n// Convert times to ISO strings for use in the Flux query.\nlet start_time_iso = new Date(startTime).toISOString();\nlet end_time_iso = new Date(endTime).toISOString();\n\n// --- 2. Build the Flux Query String ---\n// Define an aggregation window (e.g., 5 minutes = 5m). \nlet window_period = \"5m\";\n\n// Construct the full Flux query string.\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: ${start_time_iso}, stop: ${end_time_iso})\n  |> filter(fn: (r) => r[\"_measurement\"] == \"humidity\" or r[\"_measurement\"] == \"temperature\")\n  |> aggregateWindow(every: ${window_period}, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")\n`;\n\n// Set msg.payload to the query, which the influxdb in node will execute.\nmsg.payload = msg.query;\n\nreturn msg;",
+        "func": "// Function to convert time strings (e.g., \"1h\", \"30m\") to milliseconds\nfunction presetToMs(preset) {\n  const unit = preset.slice(-1); // m, h, d, w\n  const value = parseInt(preset.slice(0, -1));\n\n  const MS_PER_MINUTE = 60 * 1000;\n  const MS_PER_HOUR = MS_PER_MINUTE * 60;\n  const MS_PER_DAY = MS_PER_HOUR * 24;\n  const MS_PER_WEEK = MS_PER_DAY * 7;\n\n  switch (unit) {\n    case 'm': return value * MS_PER_MINUTE;\n    case 'h': return value * MS_PER_HOUR;\n    case 'd': return value * MS_PER_DAY;\n    case 'w': return value * MS_PER_WEEK;\n    default: return 0;\n  }\n}\n\nlet startTime;\nlet endTime;\nlet presetValue = msg.payload.Preset;\n\n// --- 1. Determine Start and End Times ---\nif (presetValue) {\n  // If a preset is selected, use it.\n  let msDuration = presetToMs(presetValue);\n\n  // End time is always now (current timestamp in milliseconds)\n  let now = Date.now();\n  endTime = now;\n\n  // Start time is calculated: now - duration\n  startTime = now - msDuration;\n\n  // The `datetime-local` input type returns milliseconds, so we use them here.\n} else {\n  // If no preset is selected, use the custom Start/End times from the form.\n  // The ui-form returns epoch milliseconds for 'datetime-local' type.\n  startTime = msg.payload.Start;\n  endTime = msg.payload.End;\n\n  // Optional: Add logic here to require custom fields if no preset is selected.\n  if (!startTime || !endTime) {\n    node.error(\"Please select a time preset or provide both Start and End times.\");\n    return null; // Stop the flow\n  }\n}\n\n// Convert times to ISO strings for use in the Flux query.\nlet start_time_iso = new Date(startTime).toISOString();\nlet end_time_iso = new Date(endTime).toISOString();\n\n// --- 2. Build the Flux Query String ---\n// Define an aggregation window (e.g., 5 minutes = 5m). \nlet window_period = \"5m\";\n\n// Construct the full Flux query string.\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: ${start_time_iso}, stop: ${end_time_iso})\n  |> filter(fn: (r) => r[\"_measurement\"] == \"distance\")\n  |> aggregateWindow(every: 30s, fn: mean, createEmpty: false)\n  |> yield(name: \"results\")\n`;\n\n//  |> filter(fn: (r) => r[\"_measurement\"] == \"flow_rate\" or r[\"_measurement\"] == \"distance\")\n\n// Set msg.payload to the query, which the influxdb in node will execute.\nmsg.payload = msg.query;\n\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -576,7 +577,7 @@
         "dropdownOptions": [
             {
                 "dropdown": "Preset",
-                "value": "",
+                "value": "\"\"",
                 "label": "Custom Range"
             },
             {
@@ -665,5 +666,25 @@
                 "f0c0b60f467b5a4c"
             ]
         ]
+    },
+    {
+        "id": "ee91ead999b17fcf",
+        "type": "comment",
+        "z": "72c28959539b9464",
+        "name": "",
+        "info": "Fazer query a base de dados para ver que tabelas(kind of sensor) existem e adicionar check boxes ou algo do genero para permitir selecionar os dados",
+        "x": 500,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "8e9692612bf6b271",
+        "type": "comment",
+        "z": "72c28959539b9464",
+        "name": "",
+        "info": "adicionar ao range picker update time from\n\nstill to 1h ",
+        "x": 660,
+        "y": 520,
+        "wires": []
     }
 ]
