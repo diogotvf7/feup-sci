@@ -9,7 +9,13 @@ from pathlib import Path
 # CONFIGURATION
 # ==============================================================================
 # Path to the trained model file exported from the Jupyter Notebook
-MODEL_FILENAME = 'dam_forecast_model.pkl'
+SCRIPT_DIR = Path(__file__).resolve().parent
+
+PROJECT_ROOT = SCRIPT_DIR.parent
+
+MODEL_DIR = PROJECT_ROOT / 'models'
+
+MODEL_FILENAME = MODEL_DIR / 'dam_forecast_model.pkl'
 
 def load_inference_artifacts():
     """
@@ -148,9 +154,9 @@ if __name__ == "__main__":
         output_payload = {
             "status": "success",
             "timestamp": "2025-10-25T12:00:00Z", # Should be dynamic
-            "current_level": current_data['water_volume_pct'],
+            "current_level": float(current_data['water_volume_pct']),
             "forecast_7days": {
-                f"day_{i+1}": round(val, 2) for i, val in enumerate(forecast)
+                f"day_{i+1}": round(float(val), 2) for i, val in enumerate(forecast)
             },
             "safety_alert": "CRITICAL_OVERFLOW" if any(v > 90 for v in forecast) else "NORMAL"
         }
