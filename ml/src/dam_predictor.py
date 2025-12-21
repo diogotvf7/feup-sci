@@ -11,7 +11,13 @@ import datetime
 # CONFIGURATION
 # ==============================================================================
 # Path to the trained model file exported from the Jupyter Notebook
-MODEL_FILENAME = 'dam_forecast_model.pkl'
+SCRIPT_DIR = Path(__file__).resolve().parent
+
+PROJECT_ROOT = SCRIPT_DIR.parent
+
+MODEL_DIR = PROJECT_ROOT / 'models'
+
+MODEL_FILENAME = MODEL_DIR / 'dam_forecast_model.pkl'
 
 def load_inference_artifacts():
     """
@@ -114,27 +120,57 @@ if __name__ == "__main__":
     # In production, these values would come from Node-RED command line args or API request
     print("\n[SYSTEM] Simulating input data reception...")
     
+    # ===== NORMAL DATA FOR TESTING =====
+
+    # # MOCK: Current data (Today)
+    # current_data = {
+    #     'water_volume_pct': 84.5,      # Current Dam Level
+    #     'precip_total_mm': 15.2,       # Today's Rain
+    #     'temp_max_C': 16.5,
+    #     'temp_min_C': 9.2,
+    #     'temp_afternoon_C': 14.0,
+    #     'humidity_afternoon': 82.0,
+    #     'clouds_afternoon': 90.0,
+    #     'wind_max_speed': 12.5,
+    #     'month': 10,
+    #     'dayofyear': 285
+    # }
+    
+    # # MOCK: History Cache (Last 30 days) - Required for rolling sums/lags
+    # # Node-RED needs to maintain a small database or CSV of past days
+    # print("[SYSTEM] Loading history cache for feature engineering...")
+    # history_mock = pd.DataFrame({
+    #     'water_volume_pct': np.linspace(80, 84, 30), # Simulating a slow rise
+    #     'precip_total_mm': np.random.uniform(0, 10, 30)
+    # })
+
+    # ===== END NORMAL DATA FOR TESTING =====
+
+    # ===== DRY DATA FOR TESTING =====
+
     # MOCK: Current data (Today)
     current_data = {
-        'water_volume_pct': 84.5,      # Current Dam Level
-        'precip_total_mm': 15.2,       # Today's Rain
-        'temp_max_C': 16.5,
-        'temp_min_C': 9.2,
-        'temp_afternoon_C': 14.0,
-        'humidity_afternoon': 82.0,
-        'clouds_afternoon': 90.0,
-        'wind_max_speed': 12.5,
-        'month': 10,
-        'dayofyear': 285
+        'water_volume_pct': 18.5,      # Current Dam Level
+        'precip_total_mm': 0.0,       # Today's Rain
+        'temp_max_C': 28.0,
+        'temp_min_C': 18.0,
+        'temp_afternoon_C': 26.0,
+        'humidity_afternoon': 35.0,
+        'clouds_afternoon': 5.0,
+        'wind_max_speed': 8.0,
+        'month': 8,
+        'dayofyear': 230
     }
     
     # MOCK: History Cache (Last 30 days) - Required for rolling sums/lags
     # Node-RED needs to maintain a small database or CSV of past days
     print("[SYSTEM] Loading history cache for feature engineering...")
     history_mock = pd.DataFrame({
-        'water_volume_pct': np.linspace(80, 84, 30), # Simulating a slow rise
-        'precip_total_mm': np.random.uniform(0, 10, 30)
+        'water_volume_pct': np.linspace(22.0, 18.5, 30), # Simulating a slow rise
+        'precip_total_mm': np.random.uniform(0, 0.5, 30)
     })
+
+    # ===== END DRY DATA FOR TESTING =====
     
     try:
         # --- STEP 3: PROCESS PHYSICS ---
@@ -150,11 +186,15 @@ if __name__ == "__main__":
         output_payload = {
             "status": "success",
             "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            "current_level": current_data['water_volume_pct'],
+            "current_level": float(current_data['water_volume_pct']),
             "forecast_7days": {
                 f"day_{i+1}": round(float(val), 2) for i, val in enumerate(forecast)
             },
-            "safety_alert": "CRITICAL_OVERFLOW" if any(v > 90 for v in forecast) else "NORMAL"
+            "safety_alert": (
+                "CRITICAL_OVERFLOW" if any(float(v) > 90 for v in forecast)
+                else "DROUGHT_WARNING" if any(float(v) < 20 for v in forecast)
+                else "NORMAL"
+            )
         }
         
         print("\n" + "="*40)
