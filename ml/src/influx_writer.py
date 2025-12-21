@@ -7,6 +7,8 @@ class InfluxDBWriter:
     def __init__(self):
         # Configuration matches docker-compose.yml
         self.url = os.environ.get("INFLUXDB_URL", "http://localhost:8086")
+
+        # idc about the token
         self.token = os.environ.get("INFLUXDB_TOKEN", "JLV2l-ePCBSDq45BCpZx02_vtupJPmSnJ1lnQ5LoJzFJSIxit30n0AMz_wNvaBzQcOyR4JBej3KJ4CLprh5sPw==")
         self.org = os.environ.get("INFLUXDB_ORG", "SCI") 
         self.bucket = os.environ.get("INFLUXDB_BUCKET", "ml-predictions")

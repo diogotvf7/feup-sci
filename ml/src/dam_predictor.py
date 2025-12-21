@@ -7,13 +7,20 @@ from pathlib import Path
 
 import datetime
 
+from dotenv import load_dotenv
+
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
 # Path to the trained model file exported from the Jupyter Notebook
 SCRIPT_DIR = Path(__file__).resolve().parent
 
-PROJECT_ROOT = SCRIPT_DIR.parent
+# Root of the repo (feup-sci) is two levels up from ml/src
+REPO_ROOT = SCRIPT_DIR.parent.parent 
+PROJECT_ROOT = SCRIPT_DIR.parent # ml folder
+
+# Load environment variables from .env at repo root
+load_dotenv(REPO_ROOT / '.env')
 
 MODEL_DIR = PROJECT_ROOT / 'models'
 
@@ -109,17 +116,10 @@ def make_prediction(model, input_features, feature_list, current_volume):
     
     return forecast_abs
 
-# ==============================================================================
-# MAIN EXECUTION (ENTRY POINT FOR NODE-RED)
-# ==============================================================================
-if __name__ == "__main__":
-    # --- STEP 1: LOAD BRAIN ---
-    model, features, params = load_inference_artifacts()
-    
-    # --- STEP 2: RECEIVE INPUT (SIMULATED FOR THIS SCRIPT) ---
-    # In production, these values would come from Node-RED command line args or API request
-    print("\n[SYSTEM] Simulating input data reception...")
-    
+def get_mock_data():
+    """
+    Generates simulated data for testing purposes.
+    """
     # ===== NORMAL DATA FOR TESTING =====
 
     # # MOCK: Current data (Today)
@@ -146,8 +146,8 @@ if __name__ == "__main__":
 
     # ===== END NORMAL DATA FOR TESTING =====
 
-    # ===== DRY DATA FOR TESTING =====
-
+    print("\n[SYSTEM] Simulating input data reception (MOCK MODE)...")
+    
     # MOCK: Current data (Today)
     current_data = {
         'water_volume_pct': 18.5,      # Current Dam Level
@@ -162,15 +162,39 @@ if __name__ == "__main__":
         'dayofyear': 230
     }
     
-    # MOCK: History Cache (Last 30 days) - Required for rolling sums/lags
-    # Node-RED needs to maintain a small database or CSV of past days
+    # MOCK: History Cache (Last 30 days)
     print("[SYSTEM] Loading history cache for feature engineering...")
     history_mock = pd.DataFrame({
-        'water_volume_pct': np.linspace(22.0, 18.5, 30), # Simulating a slow rise
+        'water_volume_pct': np.linspace(22.0, 18.5, 30),  # Simulating a slow rise
         'precip_total_mm': np.random.uniform(0, 0.5, 30)
     })
+    
+    return current_data, history_mock
 
-    # ===== END DRY DATA FOR TESTING =====
+# ==============================================================================
+# MAIN EXECUTION (ENTRY POINT FOR NODE-RED)
+# ==============================================================================
+if __name__ == "__main__":
+    # --- STEP 1: LOAD BRAIN ---
+    model, features, params = load_inference_artifacts()
+    
+    # --- STEP 2: RECEIVE INPUT ---
+    current_data = None
+    history_mock = None
+
+    # Comment out this try block to use mock data
+    try:
+        # Try to load real data
+        from data_loader import DataLoader
+        print("[SYSTEM] Connecting to Real Sensors...")
+        loader = DataLoader()
+        current_data = loader.get_real_time_state()
+        history_mock = loader.get_history_df() 
+    except Exception as e:
+        print(f"[WARNING] Failed to load real data: {e}. Falling back to Mock.")
+    
+    if current_data is None:
+        current_data, history_mock = get_mock_data()
     
     try:
         # --- STEP 3: PROCESS PHYSICS ---
