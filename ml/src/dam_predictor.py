@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+import datetime
+
 # ==============================================================================
 # CONFIGURATION
 # ==============================================================================
@@ -147,10 +149,10 @@ if __name__ == "__main__":
         # This is what Node-RED parses to update the Dashboard
         output_payload = {
             "status": "success",
-            "timestamp": "2025-10-25T12:00:00Z", # Should be dynamic
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "current_level": current_data['water_volume_pct'],
             "forecast_7days": {
-                f"day_{i+1}": round(val, 2) for i, val in enumerate(forecast)
+                f"day_{i+1}": round(float(val), 2) for i, val in enumerate(forecast)
             },
             "safety_alert": "CRITICAL_OVERFLOW" if any(v > 90 for v in forecast) else "NORMAL"
         }
@@ -160,6 +162,18 @@ if __name__ == "__main__":
         print("="*40)
         print(json.dumps(output_payload, indent=4))
         print("="*40)
+
+        # --- STEP 6: WRITE TO INFLUXDB ---
+        try:
+            from influx_writer import InfluxDBWriter
+            print("[SYSTEM] Writing to InfluxDB...")
+            writer = InfluxDBWriter()
+            writer.write_forecast(output_payload)
+            writer.close()
+        except ImportError:
+            print("[WARNING] 'influx_writer' module not found. Skipping DB write.")
+        except Exception as e:
+            print(f"[ERROR] Failed to write to InfluxDB: {e}")
         
     except Exception as e:
         error_payload = {"status": "error", "message": str(e)}
