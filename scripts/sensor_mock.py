@@ -29,8 +29,8 @@ simulated_sensors = [
         "id": "3ade6e09-3365-45a2-abca-1a01611ab078",
         "kind": "distance",
         "units": "cm",
-        "min": 5.0,
-        "max": 200.0,
+        "min": 10,
+        "max": 1000.0,
         "time_stamp": 1764501821,
     },
     {
@@ -38,8 +38,8 @@ simulated_sensors = [
         "id": "99999999-aaaa-bbbb-cccc-dddddddddddd",
         "kind": "distance",
         "units": "cm",
-        "min": 5.0,
-        "max": 200.0,
+        "min": 10,
+        "max": 1000.0,
         "time_stamp": 1764501821,
     },
 ]
