@@ -16,9 +16,9 @@
         "env": []
     },
     {
-        "id": "3852746e5c5cd963",
+        "id": "ae0d8a7f850c0cb8",
         "type": "tab",
-        "label": "Dam Percentage / Water Level",
+        "label": "Temporal Water Level",
         "disabled": false,
         "info": "",
         "env": []
@@ -160,38 +160,38 @@
     {
         "id": "024d435ef38f59f9",
         "type": "ui-page",
-        "name": "Page 1",
+        "name": "Water Level",
         "ui": "f9b499d34c1cba03",
-        "path": "/page1",
-        "icon": "home",
+        "path": "/waterLevel",
+        "icon": "water",
         "layout": "grid",
         "theme": "9dd7ed5c0bad9357",
         "breakpoints": [
             {
                 "name": "Default",
-                "px": 0,
-                "cols": 3
+                "px": "0",
+                "cols": "3"
             },
             {
                 "name": "Tablet",
-                "px": 576,
-                "cols": 6
+                "px": "576",
+                "cols": "6"
             },
             {
                 "name": "Small Desktop",
-                "px": 768,
-                "cols": 9
+                "px": "768",
+                "cols": "9"
             },
             {
                 "name": "Desktop",
-                "px": 1024,
-                "cols": 12
+                "px": "1024",
+                "cols": "12"
             }
         ],
         "order": 1,
         "className": "",
-        "visible": "true",
-        "disabled": "false"
+        "visible": true,
+        "disabled": false
     },
     {
         "id": "121ee8e7538ae057",
@@ -199,8 +199,8 @@
         "name": "Damn Level",
         "page": "024d435ef38f59f9",
         "width": "2",
-        "height": "2",
-        "order": 1,
+        "height": "3",
+        "order": 3,
         "showTitle": true,
         "className": "",
         "visible": "true",
@@ -234,7 +234,31 @@
         "icon": "fa-line-chart",
         "layout": "grid",
         "theme": "f6262b9f338d1e1f",
-        "order": 2
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": 0,
+                "cols": 3
+            },
+            {
+                "name": "Tablet",
+                "px": 576,
+                "cols": 6
+            },
+            {
+                "name": "Small Desktop",
+                "px": 768,
+                "cols": 9
+            },
+            {
+                "name": "Desktop",
+                "px": 1024,
+                "cols": 12
+            }
+        ],
+        "order": 2,
+        "visible": true,
+        "disabled": false
     },
     {
         "id": "550b719463567d1c",
@@ -243,6 +267,34 @@
         "page": "51f2249e083c260f",
         "width": "12",
         "order": 1
+    },
+    {
+        "id": "c85d3c8345c73513",
+        "type": "ui-group",
+        "name": "Range Picker",
+        "page": "024d435ef38f59f9",
+        "width": "34",
+        "height": "2",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "false",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "3e5b5ae7f549665b",
+        "type": "ui-group",
+        "name": "Water Level Temporal",
+        "page": "024d435ef38f59f9",
+        "width": "10",
+        "height": "3",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
     },
     {
         "id": "json_parser",
@@ -418,7 +470,7 @@
         "z": "8350cc1f7811e02f",
         "g": "group_logging",
         "name": "Format for InfluxDB",
-        "func": "function ToLocalDate(inDate) {\n    // Convert Unix timestamp (seconds) to JS Date object\n    return new Date(inDate * 1000);\n}\n\n// 1. Set the Measurement Name (e.g., \"distance\")\nmsg.measurement = msg.payload.kind;\n\n// 2. Define Payload [Fields, Tags]\nmsg.payload = [\n    {\n        // FIELDS: This is the ONLY data column being saved now.\n        // We removed 'timestamp' from here.\n        value: msg.payload.data\n    },\n    {\n        // TAGS: Metadata for filtering\n        sensor_id: msg.payload.id,\n        units: msg.payload.units\n    }\n];\n\n// 3. Override the \"Now\" time\n// This tells InfluxDB: \"Don't use the current time, use this specific time instead.\"\nmsg.timestamp = ToLocalDate(msg.payload.time_stamp);\n\nreturn msg;",
+        "func": "// CONFIGURATION: Adjust these to match your tank\nconst distBottom = 1000.0; // Distance when empty (0%)\nconst distFull = 10.0;     // Distance when full (100%)\n\nfunction ToLocalDate(inDate) {\n    return new Date(inDate * 1000);\n}\n\n// 1. Initialize Fields Object with the standard 'value'\nlet fields = {\n    value: msg.payload.data\n};\n\n// 2. Conditional Logic: Calculate Percentage ONLY for Distance/cm\nif (msg.payload.kind === \"distance\" && msg.payload.units === \"cm\") {\n    let currentDistance = msg.payload.data;\n\n    if (currentDistance !== undefined && currentDistance !== null) {\n        let percentage = ((distBottom - currentDistance) / (distBottom - distFull)) * 100;\n\n        // Clamp between 0 and 100\n        percentage = Math.max(0, Math.min(100, percentage));\n\n        // Add percentage to the fields object\n        fields.percentage = parseFloat(percentage.toFixed(1));\n    }\n}\n\n// 3. Set the Measurement Name\nmsg.measurement = msg.payload.kind;\n\n// 4. Define Payload [Fields, Tags]\nmsg.payload = [\n    fields,\n    {\n        // TAGS: Metadata for filtering\n        sensor_id: msg.payload.id,\n        units: msg.payload.units\n    }\n];\n\n// 5. Override the \"Now\" time\nmsg.timestamp = ToLocalDate(msg.payload.time_stamp);\n\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -696,32 +748,101 @@
         "wires": []
     },
     {
-        "id": "calc_percentage_node",
+        "id": "e7238bd1585db2e1",
         "type": "function",
-        "z": "3852746e5c5cd963",
-        "name": "Calculate %",
-        "func": "// CONFIGURATION\nconst distBottom = 1000; // 0% Level (cm/mm)\nconst distFull = 10;     // 100% Level (cm/mm)\nconst limit30s = 30 * 1000; // 30 seconds in ms\n\nlet distWater;\n\n// --- 1. Determine Distance (Single vs Average) ---\nif (Array.isArray(msg.payload)) {\n    if (msg.payload.length === 0) return null; // Protect against empty arrays\n\n    // *** FIX: Initialize qResult as an empty array first ***\n    msg.qResult = [];\n\n    // A. Find the latest timestamp in the dataset\n    let maxTime = 0;\n    for (let i = 0; i < msg.payload.length; i++) {\n        let t = new Date(msg.payload[i]._time).getTime();\n        if (t > maxTime) maxTime = t;\n    }\n\n    msg.maxTime = new Date(maxTime).toLocaleTimeString();\n    msg.maxTime = new Date(maxTime);\n    msg.qResult1 = msg.payload;\n    // B. Calculate Average only for records within 30s of maxTime\n    let sum = 0;\n    let count = 0;\n\n    for (let i = 0; i < msg.payload.length; i++) {\n        let recordTime = new Date(msg.payload[i]._time).getTime();\n        // Check if record is within the 30s window relative to the latest record\n        if ((maxTime - recordTime) <= limit30s) {\n            sum += msg.payload[i]._value;\n            count++;\n            msg.qResult.push(msg.payload[i]); // Now this works because qResult is []\n        }\n    }\n\n    if (count > 0) {\n        distWater = sum / count;\n    } else {\n        return null;\n    }\n\n} else {\n    // Not an array: Use _value directly (or payload if scalar)\n    msg.qResult = [msg.payload]; // Wrap in array for consistency\n    distWater = (msg.payload && msg.payload._value !== undefined) ? msg.payload._value : msg.payload;\n}\n\n// --- 2. Calculate Percentage ---\nif (distWater !== undefined && distWater !== null) {\n    let percentage = ((distBottom - distWater) / (distBottom - distFull)) * 100;\n\n    // --- DEBUGGING ---\n    msg.debug = {\n        \"Distance (Avg 30s)\": distWater,\n        \"Raw Percentage\": percentage,\n    };\n\n    msg.payload = parseFloat(percentage.toFixed(1));\n    return msg;\n}",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "Format Timestamps for Flux",
+        "func": "// Helper: Parse Preset to Milliseconds\nfunction presetToMs(preset) {\n  if (!preset) return 0;\n  const unit = preset.slice(-1);\n  const val = parseInt(preset.slice(0, -1));\n  if (unit === 'm') return val * 60000;\n  if (unit === 'h') return val * 3600000;\n  if (unit === 'd') return val * 86400000;\n  return 0;\n}\n\n// 1. Handle Payload Structure\nlet formData = msg.payload || {};\n// If the payload is wrapped (from Loop Manager), unwrap it\nif (msg.payload.payload) formData = msg.payload.payload;\n\nlet startTime, endTime;\nlet presetValue = formData.Preset;\nlet frequencyValue = formData.Frequency;\n\n// 2. Determine Time Range (Start/Stop)\nif (presetValue && presetValue !== \"\") {\n  // PRESET MODE: Calculate start based on \"now\"\n  let msDuration = presetToMs(presetValue);\n  let now = Date.now();\n  endTime = now;\n  startTime = now - msDuration;\n} else {\n  // CUSTOM MODE: Use explicit Start/End times\n  startTime = new Date(formData.Start).getTime();\n  endTime = new Date(formData.End).getTime();\n\n  // Safety check\n  if (isNaN(startTime) || isNaN(endTime)) {\n    // Only error if we actually expected a custom range\n    if (!presetValue) return null;\n  }\n}\n\n// 3. Determine Aggregation Window (Frequency)\n// Use 'Frequency' from the dropdown for the window (e.g., \"5s\", \"1m\")\nlet windowPeriod = frequencyValue;\n\n// Safety: If frequency is missing or \"stop\" (manual update), default to 5s or 1m\nif (!windowPeriod || windowPeriod === \"stop\") {\n  windowPeriod = \"5s\";\n}\n\n// 4. Build Flux Query\nlet startISO = new Date(startTime).toISOString();\nlet endISO = new Date(endTime).toISOString();\n\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: ${startISO}, stop: ${endISO})\n  |> filter(fn: (r) => r[\"_measurement\"] == \"distance\")\n  |> filter(fn: (r) => r[\"_field\"] == \"percentage\")\n  |> aggregateWindow(every: ${windowPeriod}, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")\n`;\n\nmsg.payload = msg.query;\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1130,
-        "y": 420,
+        "x": 740,
+        "y": 440,
         "wires": [
             [
-                "7722d370268fdd12",
-                "c05624c481e18622",
-                "e090158751cf7677"
+                "d22f4396a1ef5566"
             ]
         ]
     },
     {
-        "id": "7722d370268fdd12",
+        "id": "d22f4396a1ef5566",
+        "type": "influxdb in",
+        "z": "ae0d8a7f850c0cb8",
+        "influxdb": "influxdb_config_local",
+        "name": "Flux: Mean Temp/Humid",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1050,
+        "y": 440,
+        "wires": [
+            [
+                "ca953b04ca73961d"
+            ]
+        ]
+    },
+    {
+        "id": "loop_manager_func",
+        "type": "function",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "Loop Manager",
+        "func": "// Helper to parse \"5s\", \"1m\" to milliseconds\nfunction getMs(str) {\n    if (!str) return 5000;\n    let unit = str.slice(-1);\n    let val = parseInt(str.slice(0, -1));\n    if (unit === 's') return val * 1000;\n    if (unit === 'm') return val * 60000;\n    if (unit === 'h') return val * 3600000;\n    if (unit === 'd') return val * 86400000;\n    return 5000;\n}\n\n// --- 1. Save Configuration ---\n// Check if this message comes from the Form (has a Preset)\nif (msg.payload && msg.payload.Preset !== undefined) {\n    // Save the CONTENT of the payload (the form data)\n    context.set('lastConfig', msg.payload);\n}\n\n// --- 2. Handle STOP Command ---\nif (msg.payload && msg.payload.Frequency === \"stop\") {\n    context.set('interval', null);\n\n    // If this stop command came with form data, run it once.\n    let output2 = (msg.payload.Preset !== undefined) ? msg : null;\n\n    return [{ reset: true }, output2, null];\n}\n\n// --- 3. Handle New Frequency (Start/Update Loop) ---\nif (msg.payload && msg.payload.Frequency) {\n    let interval = getMs(msg.payload.Frequency);\n    context.set('interval', interval);\n\n    // Output 1: Reset Delay\n    // Output 2: Fire Query Immediately (Pass the full 'msg')\n    // Output 3: Start Loop\n    return [\n        { reset: true },\n        msg,\n        { payload: \"loop\", delay: interval }\n    ];\n}\n\n// --- 4. Handle The Loop Trigger ---\nif (msg.payload === \"loop\") {\n    let interval = context.get('interval');\n\n    // If stopped, do nothing\n    if (!interval) return null;\n\n    // Retrieve the saved form data\n    let lastConfig = context.get('lastConfig');\n\n    // Safety: If no config saved, stop.\n    if (!lastConfig) return null;\n\n    // *** FIX IS HERE ***\n    // We must wrap the config back into a 'payload' property\n    let newMsg = { payload: lastConfig };\n\n    return [\n        null,\n        newMsg,\n        { payload: \"loop\", delay: interval }\n    ];\n}",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 540,
+        "wires": [
+            [
+                "loop_delay_node"
+            ],
+            [
+                "4a49b047acddf2e5",
+                "e7238bd1585db2e1"
+            ],
+            [
+                "loop_delay_node"
+            ]
+        ]
+    },
+    {
+        "id": "loop_delay_node",
+        "type": "delay",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "Variable Timer",
+        "pauseType": "delayv",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 440,
+        "y": 640,
+        "wires": [
+            [
+                "loop_manager_func"
+            ]
+        ]
+    },
+    {
+        "id": "dae3cb6215f44537",
         "type": "debug",
-        "z": "3852746e5c5cd963",
-        "name": "debug 1",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "debug 2",
         "active": false,
         "tosidebar": true,
         "console": false,
@@ -730,34 +851,73 @@
         "targetType": "full",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1300,
-        "y": 320,
+        "x": 1560,
+        "y": 540,
         "wires": []
     },
     {
-        "id": "d626923623f51a61",
+        "id": "49c12bb8fc775a6b",
         "type": "function",
-        "z": "3852746e5c5cd963",
-        "name": "Query",
-        "func": "msg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: 0)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"distance\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> last()\n`;\n\n// Set msg.payload to the query, which the influxdb in node will execute.\nmsg.payload = msg.query;\n\nreturn msg;",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "Calculate %",
+        "func": "// CONFIGURATION\nconst distBottom = 1000; // 0% Level (cm/mm)\nconst distFull = 10;     // 100% Level (cm/mm)\nconst limit30s = 30 * 1000; // 30 seconds in ms\n\nlet distWater;\n\n// --- 1. Determine Distance (Single vs Average) ---\nif (Array.isArray(msg.payload)) {\n    if (msg.payload.length === 0) return null; // Protect against empty arrays\n\n    // *** FIX: Initialize qResult as an empty array first ***\n    msg.qResult = [];\n\n    // A. Find the latest timestamp in the dataset\n    let maxTime = 0;\n    for (let i = 0; i < msg.payload.length; i++) {\n        let t = new Date(msg.payload[i]._time).getTime();\n        if (t > maxTime) maxTime = t;\n    }\n\n    msg.maxTime = new Date(maxTime).toLocaleTimeString();\n    msg.maxTime = new Date(maxTime);\n    msg.qResult1 = msg.payload;\n    // B. Calculate Average only for records within 30s of maxTime\n    let sum = 0;\n    let count = 0;\n\n    for (let i = 0; i < msg.payload.length; i++) {\n        let recordTime = new Date(msg.payload[i]._time).getTime();\n        // Check if record is within the 30s window relative to the latest record\n        if ((maxTime - recordTime) <= limit30s) {\n            sum += msg.payload[i]._value;\n            count++;\n            msg.qResult.push(msg.payload[i]); // Now this works because qResult is []\n        }\n    }\n\n    if (count > 0) {\n        distWater = sum / count;\n    } else {\n        return null;\n    }\n\n} else {\n    // Not an array: Use _value directly (or payload if scalar)\n    msg.qResult = [msg.payload]; // Wrap in array for consistency\n    distWater = (msg.payload && msg.payload._value !== undefined) ? msg.payload._value : msg.payload;\n}\n\n// --- 2. Calculate Percentage ---\nif (distWater !== undefined && distWater !== null) {\n    let percentage = distWater;\n\n    // --- DEBUGGING ---\n    msg.debug = {\n        \"Raw Percentage\": percentage,\n    };\n\n    msg.payload = parseFloat(percentage.toFixed(1));\n    return msg;\n}",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 650,
-        "y": 420,
+        "x": 1250,
+        "y": 840,
         "wires": [
             [
-                "195163bc8256eba1"
+                "561284a230c15fa2",
+                "c084262b0849d7b8",
+                "45b9fb22d66ebebf"
             ]
         ]
     },
     {
-        "id": "195163bc8256eba1",
+        "id": "561284a230c15fa2",
+        "type": "debug",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1420,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "4a49b047acddf2e5",
+        "type": "function",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "Query",
+        "func": "msg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: 0)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"distance\")\n  |> filter(fn: (r) => r[\"_field\"] == \"percentage\")\n  |> last()\n`;\n\n// Set msg.payload to the query, which the influxdb in node will execute.\nmsg.payload = msg.query;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 840,
+        "wires": [
+            [
+                "3af987873a84d53f"
+            ]
+        ]
+    },
+    {
+        "id": "3af987873a84d53f",
         "type": "influxdb in",
-        "z": "3852746e5c5cd963",
+        "z": "ae0d8a7f850c0cb8",
         "influxdb": "influxdb_config_local",
         "name": "FluxDB",
         "query": "",
@@ -765,18 +925,18 @@
         "precision": "",
         "retentionPolicy": "",
         "org": "SCI",
-        "x": 880,
-        "y": 420,
+        "x": 1000,
+        "y": 840,
         "wires": [
             [
-                "calc_percentage_node"
+                "49c12bb8fc775a6b"
             ]
         ]
     },
     {
-        "id": "trigger_every_second",
+        "id": "f08a5a618b9ed343",
         "type": "inject",
-        "z": "3852746e5c5cd963",
+        "z": "ae0d8a7f850c0cb8",
         "name": "Every 1s",
         "props": [
             {
@@ -790,25 +950,25 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 340,
-        "y": 420,
+        "x": 460,
+        "y": 840,
         "wires": [
             [
-                "d626923623f51a61"
+                "4a49b047acddf2e5"
             ]
         ]
     },
     {
-        "id": "c05624c481e18622",
+        "id": "c084262b0849d7b8",
         "type": "ui-gauge",
-        "z": "3852746e5c5cd963",
+        "z": "ae0d8a7f850c0cb8",
         "name": "Water Level Gauge",
         "group": "121ee8e7538ae057",
         "order": 1,
         "value": "payload",
         "valueType": "msg",
-        "width": 6,
-        "height": 4,
+        "width": "2",
+        "height": "7",
         "gtype": "gauge-tank",
         "title": "Water Level",
         "alwaysShowTitle": false,
@@ -854,16 +1014,16 @@
         "sizeGap": "",
         "sizeKeyThickness": "",
         "className": "",
-        "x": 1350,
-        "y": 520,
+        "x": 1470,
+        "y": 940,
         "wires": [
             []
         ]
     },
     {
-        "id": "e090158751cf7677",
+        "id": "45b9fb22d66ebebf",
         "type": "ui-text",
-        "z": "3852746e5c5cd963",
+        "z": "ae0d8a7f850c0cb8",
         "group": "121ee8e7538ae057",
         "order": 2,
         "width": 6,
@@ -880,8 +1040,259 @@
         "className": "",
         "value": "maxTime",
         "valueType": "msg",
-        "x": 1350,
-        "y": 580,
+        "x": 1470,
+        "y": 1000,
         "wires": []
+    },
+    {
+        "id": "c9817ae029549874",
+        "type": "ui-form",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "Windows Range Picker",
+        "group": "c85d3c8345c73513",
+        "label": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Time Preset",
+                "key": "Preset",
+                "type": "dropdown",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Update Frequency",
+                "key": "Frequency",
+                "type": "dropdown",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "Preset": "",
+            "Frequency": ""
+        },
+        "payload": "",
+        "submit": "Start",
+        "cancel": "Clear",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "Preset",
+                "value": "5m",
+                "label": "Last 5 Minute"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "30m",
+                "label": "Last 30 Minutes"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "1h",
+                "label": "Last 1 Hour"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "24h",
+                "label": "Last 24 Hours"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "stop",
+                "label": "Stop (Manual Only)"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "1s",
+                "label": "1 Second"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "5s",
+                "label": "5 Seconds"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "10s",
+                "label": "10 Seconds"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "30s",
+                "label": "30 Seconds"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "1m",
+                "label": "1 Minute"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "1h",
+                "label": "1 Hour"
+            }
+        ],
+        "x": 350,
+        "y": 340,
+        "wires": [
+            [
+                "loop_manager_func"
+            ]
+        ]
+    },
+    {
+        "id": "stop_loop_btn",
+        "type": "ui-button",
+        "z": "ae0d8a7f850c0cb8",
+        "group": "c85d3c8345c73513",
+        "name": "Stop Button",
+        "label": "STOP",
+        "order": 2,
+        "width": "1",
+        "height": 1,
+        "emulateClick": false,
+        "tooltip": "Stop Auto-Refresh",
+        "color": "white",
+        "bgcolor": "red",
+        "className": "",
+        "icon": "fa-stop",
+        "iconPosition": "left",
+        "payload": "{\"Frequency\": \"stop\"}",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 70,
+        "y": 400,
+        "wires": [
+            [
+                "loop_manager_func"
+            ]
+        ]
+    },
+    {
+        "id": "ada8b4cef0f1e8b8",
+        "type": "change",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "Clear Table Cmd",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "[]",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 810,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ca953b04ca73961d",
+        "type": "function",
+        "z": "ae0d8a7f850c0cb8",
+        "name": "Format to Chart",
+        "func": "const sensorNames = {\n    \"3ade6e09-3365-45a2-abca-1a01611ab078\": \"Tank Main\",\n    \"99999999-aaaa-bbbb-cccc-dddddddddddd\": \"Tank Backup\"\n};\n\nif (!Array.isArray(msg.payload)) return null;\n\n\nnode.send({ payload: [], reset: true });\n\nmsg.payload.forEach(p => {\n    node.send({\n        topic: sensorNames[p.sensor_id] || p.sensor_id,\n        payload: {\n            x: new Date(p._time).getTime(),\n            y: Number(p._value)\n        }\n    });\n});\n\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1300,
+        "y": 340,
+        "wires": [
+            [
+                "e58aeb1c7751b738",
+                "dae3cb6215f44537"
+            ]
+        ]
+    },
+    {
+        "id": "e58aeb1c7751b738",
+        "type": "ui-chart",
+        "z": "ae0d8a7f850c0cb8",
+        "group": "3e5b5ae7f549665b",
+        "name": "Water Level",
+        "label": "Water Level",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "payload.x",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "HH:mm:ss",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Level",
+        "yAxisProperty": "payload.y",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "100",
+        "bins": "",
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "10",
+        "height": "8",
+        "className": "",
+        "interpolation": "linear",
+        "x": 1590,
+        "y": 320,
+        "wires": [
+            []
+        ]
     }
 ]
