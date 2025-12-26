@@ -6,7 +6,7 @@ import random
 import paho.mqtt.client as mqtt
 
 # --- Configuration ---
-BROKER = "192.168.3.35"
+BROKER = "localhost"
 PORT = 1883
 USERNAME = "kalo"
 PASSWORD = "kalo"
@@ -17,31 +17,14 @@ USE_SINGLE_TOPIC = False
 # --- Sensor Definitions ---
 simulated_sensors = [
     {
-        "id": "e5f24cae-e8dd-4770-8306-fd28837aa89a",
-        "kind": "flow_rate",
-        "units": "L/hour",
-        "min": 100.0,
-        "max": 500.0,
-        "time_stamp": 1764501821,
-    },
-    {
         # Distance Sensor 1
         "id": "3ade6e09-3365-45a2-abca-1a01611ab078",
         "kind": "distance",
         "units": "cm",
-        "min": 5.0,
-        "max": 200.0,
+        "min": 10,
+        "max": 1000,
         "time_stamp": 1764501821,
-    },
-    {
-        # Distance Sensor 2 (To show how we handle same 'kind', different ID)
-        "id": "99999999-aaaa-bbbb-cccc-dddddddddddd",
-        "kind": "distance",
-        "units": "cm",
-        "min": 5.0,
-        "max": 200.0,
-        "time_stamp": 1764501821,
-    },
+    }
 ]
 
 
