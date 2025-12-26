@@ -16,6 +16,14 @@
         "env": []
     },
     {
+        "id": "3852746e5c5cd963",
+        "type": "tab",
+        "label": "Dam Percentage / Water Level",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "group_logging",
         "type": "group",
         "z": "8350cc1f7811e02f",
@@ -188,15 +196,15 @@
     {
         "id": "121ee8e7538ae057",
         "type": "ui-group",
-        "name": "Group 1",
+        "name": "Damn Level",
         "page": "024d435ef38f59f9",
-        "width": 6,
-        "height": 1,
+        "width": "2",
+        "height": "2",
         "order": 1,
         "showTitle": true,
         "className": "",
-        "visible": true,
-        "disabled": false,
+        "visible": "true",
+        "disabled": "false",
         "groupType": "default"
     },
     {
@@ -685,6 +693,195 @@
         "info": "adicionar ao range picker update time from\n\nstill to 1h ",
         "x": 660,
         "y": 520,
+        "wires": []
+    },
+    {
+        "id": "calc_percentage_node",
+        "type": "function",
+        "z": "3852746e5c5cd963",
+        "name": "Calculate %",
+        "func": "// CONFIGURATION\nconst distBottom = 1000; // 0% Level (cm/mm)\nconst distFull = 10;     // 100% Level (cm/mm)\nconst limit30s = 30 * 1000; // 30 seconds in ms\n\nlet distWater;\n\n// --- 1. Determine Distance (Single vs Average) ---\nif (Array.isArray(msg.payload)) {\n    if (msg.payload.length === 0) return null; // Protect against empty arrays\n\n    // *** FIX: Initialize qResult as an empty array first ***\n    msg.qResult = [];\n\n    // A. Find the latest timestamp in the dataset\n    let maxTime = 0;\n    for (let i = 0; i < msg.payload.length; i++) {\n        let t = new Date(msg.payload[i]._time).getTime();\n        if (t > maxTime) maxTime = t;\n    }\n\n    msg.maxTime = new Date(maxTime).toLocaleTimeString();\n    msg.maxTime = new Date(maxTime);\n\n    // B. Calculate Average only for records within 30s of maxTime\n    let sum = 0;\n    let count = 0;\n\n    for (let i = 0; i < msg.payload.length; i++) {\n        let recordTime = new Date(msg.payload[i]._time).getTime();\n        // Check if record is within the 30s window relative to the latest record\n        if ((maxTime - recordTime) <= limit30s) {\n            sum += msg.payload[i]._value;\n            count++;\n            msg.qResult.push(msg.payload[i]); // Now this works because qResult is []\n        }\n    }\n\n    if (count > 0) {\n        distWater = sum / count;\n    } else {\n        return null;\n    }\n\n} else {\n    // Not an array: Use _value directly (or payload if scalar)\n    msg.qResult = [msg.payload]; // Wrap in array for consistency\n    distWater = (msg.payload && msg.payload._value !== undefined) ? msg.payload._value : msg.payload;\n}\n\n// --- 2. Calculate Percentage ---\nif (distWater !== undefined && distWater !== null) {\n    let percentage = ((distBottom - distWater) / (distBottom - distFull)) * 100;\n\n    // --- DEBUGGING ---\n    msg.debug = {\n        \"Distance (Avg 30s)\": distWater,\n        \"Raw Percentage\": percentage,\n    };\n\n    msg.payload = parseFloat(percentage.toFixed(1));\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1130,
+        "y": 420,
+        "wires": [
+            [
+                "7722d370268fdd12",
+                "c05624c481e18622",
+                "e090158751cf7677"
+            ]
+        ]
+    },
+    {
+        "id": "7722d370268fdd12",
+        "type": "debug",
+        "z": "3852746e5c5cd963",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1300,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "d626923623f51a61",
+        "type": "function",
+        "z": "3852746e5c5cd963",
+        "name": "Query",
+        "func": "msg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: 0)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"distance\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> last()\n`;\n\n// Set msg.payload to the query, which the influxdb in node will execute.\nmsg.payload = msg.query;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 420,
+        "wires": [
+            [
+                "195163bc8256eba1"
+            ]
+        ]
+    },
+    {
+        "id": "195163bc8256eba1",
+        "type": "influxdb in",
+        "z": "3852746e5c5cd963",
+        "influxdb": "influxdb_config_local",
+        "name": "FluxDB",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 880,
+        "y": 420,
+        "wires": [
+            [
+                "calc_percentage_node"
+            ]
+        ]
+    },
+    {
+        "id": "trigger_every_second",
+        "type": "inject",
+        "z": "3852746e5c5cd963",
+        "name": "Every 1s",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 340,
+        "y": 420,
+        "wires": [
+            [
+                "d626923623f51a61"
+            ]
+        ]
+    },
+    {
+        "id": "c05624c481e18622",
+        "type": "ui-gauge",
+        "z": "3852746e5c5cd963",
+        "name": "Water Level Gauge",
+        "group": "121ee8e7538ae057",
+        "order": 1,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 6,
+        "height": 4,
+        "gtype": "gauge-tank",
+        "title": "Water Level",
+        "alwaysShowTitle": false,
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#ff2600",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "11",
+                "color": "#ff9900",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "21",
+                "color": "#00f900",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "90",
+                "color": "#ff9900",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "95",
+                "color": "#ff2600",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": 100,
+        "sizeThickness": "",
+        "sizeGap": "",
+        "sizeKeyThickness": "",
+        "className": "",
+        "x": 1350,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e090158751cf7677",
+        "type": "ui-text",
+        "z": "3852746e5c5cd963",
+        "group": "121ee8e7538ae057",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "Last Updated",
+        "label": "Last Updated:",
+        "format": "{{msg.maxTime}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "wrapText": false,
+        "className": "",
+        "value": "maxTime",
+        "valueType": "msg",
+        "x": 1350,
+        "y": 580,
         "wires": []
     }
 ]
