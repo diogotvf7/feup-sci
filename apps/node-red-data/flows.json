@@ -309,20 +309,6 @@
         "groupType": "default"
     },
     {
-        "id": "9a69b0ccd08c2320",
-        "type": "ui-group",
-        "name": "Flow Rate",
-        "page": "8bed4b15e20bbd72",
-        "width": "3",
-        "height": "3",
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
         "id": "8bed4b15e20bbd72",
         "type": "ui-page",
         "name": "Flow Rate",
@@ -357,6 +343,20 @@
         "className": "",
         "visible": "true",
         "disabled": "false"
+    },
+    {
+        "id": "9a69b0ccd08c2320",
+        "type": "ui-group",
+        "name": "Flow Rate",
+        "page": "8bed4b15e20bbd72",
+        "width": "3",
+        "height": "3",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
     },
     {
         "id": "aaed50a4d8d3a6a4",
@@ -1255,7 +1255,7 @@
         "type": "function",
         "z": "122b6eb0d33a29f5",
         "name": "Format to Chart",
-        "func": "const sensorNames = {\n    \"3ade6e09-3365-45a2-abca-1a01611ab078\": \"Tank Main\",\n    \"99999999-aaaa-bbbb-cccc-dddddddddddd\": \"Tank Backup\"\n};\n\nif (!Array.isArray(msg.payload)) return null;\n\n\nnode.send({ payload: [], reset: true });\n\nmsg.payload.forEach(p => {\n    node.send({\n        topic: sensorNames[p.sensor_id] || p.sensor_id,\n        payload: {\n            x: new Date(p._time).getTime(),\n            y: Number(p._value)\n        }\n    });\n});\n\nreturn null;",
+        "func": "const sensorNames = {\n    \"3ade6e09-3365-45a2-abca-1a01611ab078\": \"Tank Main Sensor\",\n    \"99999999-aaaa-bbbb-cccc-dddddddddddd\": \"Tank Backup Sensor\"\n};\n\nif (!Array.isArray(msg.payload)) return null;\n\n\nnode.send({ payload: [], reset: true });\n\nmsg.payload.forEach(p => {\n    node.send({\n        topic: sensorNames[p.sensor_id] || p.sensor_id,\n        payload: {\n            x: new Date(p._time).getTime(),\n            y: Number(p._value)\n        }\n    });\n});\n\nreturn null;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
