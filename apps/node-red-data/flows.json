@@ -194,20 +194,6 @@
         "disabled": "false"
     },
     {
-        "id": "121ee8e7538ae057",
-        "type": "ui-group",
-        "name": "Damn Level",
-        "page": "cfe737e1fdebf681",
-        "width": "2",
-        "height": "3",
-        "order": 3,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
         "id": "f6262b9f338d1e1f",
         "type": "ui-theme",
         "name": "Default Theme",
@@ -245,34 +231,6 @@
         "order": 1
     },
     {
-        "id": "f3f3c42e8cb75cb7",
-        "type": "ui-group",
-        "name": "Range Picker",
-        "page": "cfe737e1fdebf681",
-        "width": "34",
-        "height": "2",
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "false",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "955b903a27f58750",
-        "type": "ui-group",
-        "name": "Water Level Temporal",
-        "page": "cfe737e1fdebf681",
-        "width": "10",
-        "height": "3",
-        "order": 2,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
         "id": "cfe737e1fdebf681",
         "type": "ui-page",
         "name": "Water Level 1",
@@ -307,6 +265,98 @@
         "className": "",
         "visible": true,
         "disabled": false
+    },
+    {
+        "id": "121ee8e7538ae057",
+        "type": "ui-group",
+        "name": "Damn Level",
+        "page": "cfe737e1fdebf681",
+        "width": "2",
+        "height": "3",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "f3f3c42e8cb75cb7",
+        "type": "ui-group",
+        "name": "Range Picker",
+        "page": "cfe737e1fdebf681",
+        "width": "34",
+        "height": "2",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "false",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "955b903a27f58750",
+        "type": "ui-group",
+        "name": "Water Level Temporal",
+        "page": "cfe737e1fdebf681",
+        "width": "10",
+        "height": "3",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "9a69b0ccd08c2320",
+        "type": "ui-group",
+        "name": "Flow Rate",
+        "page": "8bed4b15e20bbd72",
+        "width": "3",
+        "height": "3",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "8bed4b15e20bbd72",
+        "type": "ui-page",
+        "name": "Flow Rate",
+        "ui": "f9b499d34c1cba03",
+        "path": "/flow",
+        "icon": "flow",
+        "layout": "grid",
+        "theme": "9dd7ed5c0bad9357",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 4,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
     },
     {
         "id": "aaed50a4d8d3a6a4",
@@ -818,7 +868,8 @@
             ],
             [
                 "9878289e3a644f2b",
-                "fdf45640cd1878a2"
+                "fdf45640cd1878a2",
+                "8dbe2d0a5c821433"
             ],
             [
                 "9e3ddf3a0bbf8a23"
@@ -1200,31 +1251,6 @@
         ]
     },
     {
-        "id": "9bc2381f042a0885",
-        "type": "change",
-        "z": "122b6eb0d33a29f5",
-        "name": "Clear Table Cmd",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "[]",
-                "tot": "json"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 810,
-        "y": 300,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "cbcec2b825dabb8d",
         "type": "function",
         "z": "122b6eb0d33a29f5",
@@ -1303,6 +1329,150 @@
         "interpolation": "linear",
         "x": 1590,
         "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8dbe2d0a5c821433",
+        "type": "function",
+        "z": "122b6eb0d33a29f5",
+        "name": "Query for FlowRate ",
+        "func": "msg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: 0)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"flow_rate\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> last()\n`;\n\n// Set msg.payload to the query, which the influxdb in node will execute.\nmsg.payload = msg.query;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 140,
+        "wires": [
+            [
+                "b3ca2013997bec19"
+            ]
+        ]
+    },
+    {
+        "id": "2fd5f9d98f8cb2cd",
+        "type": "function",
+        "z": "122b6eb0d33a29f5",
+        "name": "Calculate Flow Rate",
+        "func": "// CONFIGURATION\nconst limit30s = 30 * 1000; // 30 seconds window for averaging\n\nlet avgFlowRaw; // Average Flow in raw units\nlet currentUnit = \"\"; // To store the unit found in the payload\n\n// --- 1. Determine Average Flow (Raw) for recent data ---\nif (Array.isArray(msg.payload)) {\n    if (msg.payload.length === 0) return null;\n\n    msg.qResult = [];\n\n    // A. Find the latest timestamp\n    let maxTime = 0;\n    for (let i = 0; i < msg.payload.length; i++) {\n        let t = new Date(msg.payload[i]._time).getTime();\n        if (t > maxTime) maxTime = t;\n    }\n\n    msg.maxTime = new Date(maxTime);\n\n    // B. Calculate Average only for records within 30s of maxTime\n    let sum = 0;\n    let count = 0;\n\n    for (let i = 0; i < msg.payload.length; i++) {\n        let recordTime = new Date(msg.payload[i]._time).getTime();\n\n        if ((maxTime - recordTime) <= limit30s) {\n            sum += msg.payload[i]._value;\n            count++;\n            msg.qResult.push(msg.payload[i]);\n        }\n    }\n\n    if (count > 0) {\n        avgFlowRaw = sum / count;\n        // Grab the unit from the first record used in the average\n        currentUnit = msg.qResult[0].units;\n    } else {\n        return null;\n    }\n\n} else {\n    // Single value case\n    msg.qResult = [msg.payload];\n    avgFlowRaw = (msg.payload && msg.payload._value !== undefined) ? msg.payload._value : msg.payload;\n    // Check if units exist on the payload object, otherwise default empty\n    currentUnit = (msg.payload && msg.payload.units) ? msg.payload.units : \"\";\n    msg.maxTime = new Date().toLocaleTimeString();\n}\n\n// --- 2. Convert to m³/s if necessary ---\nif (avgFlowRaw !== undefined && avgFlowRaw !== null) {\n\n    let flow_m3s = avgFlowRaw;\n\n    // Check unit and convert if it is L/hour\n    // Using toLowerCase() to be safe against \"L/Hour\", \"l/hour\", etc.\n    if (currentUnit && currentUnit.toLowerCase() === \"l/hour\") {\n        // Conversion: 1 L/h = 1 / 3,600,000 m³/s\n        flow_m3s = avgFlowRaw / 3600000;\n    }\n\n    // --- DEBUGGING ---\n    msg.debug = {\n        \"Raw Average\": avgFlowRaw,\n        \"Detected Unit\": currentUnit,\n        \"Final Flow (m3/s)\": flow_m3s\n    };\n\n    msg.payload = Number(flow_m3s);\n\n    \n\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 100,
+        "wires": [
+            [
+                "a116ea9b44a0df79",
+                "cc36ed558a56d4a2"
+            ]
+        ]
+    },
+    {
+        "id": "b3ca2013997bec19",
+        "type": "influxdb in",
+        "z": "122b6eb0d33a29f5",
+        "influxdb": "influxdb_config_local",
+        "name": "FluxDB",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 900,
+        "y": 100,
+        "wires": [
+            [
+                "2fd5f9d98f8cb2cd"
+            ]
+        ]
+    },
+    {
+        "id": "a116ea9b44a0df79",
+        "type": "ui-text",
+        "z": "122b6eb0d33a29f5",
+        "group": "9a69b0ccd08c2320",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "Last Updated Flow Rate Gauge",
+        "label": "Last Updated:",
+        "format": "{{msg.maxTime}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "wrapText": false,
+        "className": "",
+        "value": "maxTime",
+        "valueType": "msg",
+        "x": 1480,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "cc36ed558a56d4a2",
+        "type": "ui-gauge",
+        "z": "122b6eb0d33a29f5",
+        "name": "Flow Rate Gauge ",
+        "group": "9a69b0ccd08c2320",
+        "order": 1,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Flow Rate Gauge",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "m3/s",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#000000",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "1",
+                "color": "#96d35f",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "8",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "9",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": 10,
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 1470,
+        "y": 160,
         "wires": [
             []
         ]

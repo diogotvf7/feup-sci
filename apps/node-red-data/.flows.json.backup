@@ -194,20 +194,6 @@
         "disabled": "false"
     },
     {
-        "id": "121ee8e7538ae057",
-        "type": "ui-group",
-        "name": "Group 1",
-        "page": "cfe737e1fdebf681",
-        "width": 6,
-        "height": 1,
-        "order": 3,
-        "showTitle": true,
-        "className": "",
-        "visible": true,
-        "disabled": false,
-        "groupType": "default"
-    },
-    {
         "id": "f6262b9f338d1e1f",
         "type": "ui-theme",
         "name": "Default Theme",
@@ -245,34 +231,6 @@
         "order": 1
     },
     {
-        "id": "f3f3c42e8cb75cb7",
-        "type": "ui-group",
-        "name": "Range Picker",
-        "page": "cfe737e1fdebf681",
-        "width": "34",
-        "height": "2",
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "false",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "955b903a27f58750",
-        "type": "ui-group",
-        "name": "Water Level Temporal",
-        "page": "cfe737e1fdebf681",
-        "width": "10",
-        "height": "3",
-        "order": 2,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
         "id": "cfe737e1fdebf681",
         "type": "ui-page",
         "name": "Water Level 1",
@@ -307,6 +265,48 @@
         "className": "",
         "visible": true,
         "disabled": false
+    },
+    {
+        "id": "121ee8e7538ae057",
+        "type": "ui-group",
+        "name": "Damn Level",
+        "page": "cfe737e1fdebf681",
+        "width": "2",
+        "height": "3",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "f3f3c42e8cb75cb7",
+        "type": "ui-group",
+        "name": "Range Picker",
+        "page": "cfe737e1fdebf681",
+        "width": "34",
+        "height": "2",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "false",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "955b903a27f58750",
+        "type": "ui-group",
+        "name": "Water Level Temporal",
+        "page": "cfe737e1fdebf681",
+        "width": "10",
+        "height": "3",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
     },
     {
         "id": "aaed50a4d8d3a6a4",
@@ -1197,31 +1197,6 @@
             [
                 "e2a141fbeb622391"
             ]
-        ]
-    },
-    {
-        "id": "9bc2381f042a0885",
-        "type": "change",
-        "z": "122b6eb0d33a29f5",
-        "name": "Clear Table Cmd",
-        "rules": [
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "[]",
-                "tot": "json"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 810,
-        "y": 300,
-        "wires": [
-            []
         ]
     },
     {
