@@ -2,3 +2,13 @@
 % Summary: Recap of project goals and achievements.
 % Future Work: Suggestions for future enhancements and research directions.
 % Avoid sub-sections here as per instructions.
+
+\subsection{Future Work}
+Building upon the current prototype, several directions for future research and development have been identified to transition this system toward a real-world deployment:
+
+\begin{itemize}
+    \item \textbf{Sensor Fusion and Precision:} Future iterations will involve testing a wider array of sensors to increase the precision of the Decision Support System (DSS). Integrating additional environmental variables will provide the AI models with a more comprehensive dataset, leading to more accurate automated and manual control recommendations.
+    \item \textbf{Actuator Integration for Full Automation:} A primary goal is the addition of a physical solenoid valve or similar actuator to replace the current manual intervention. This will enable the system to close the feedback loop entirely, achieving the "Self-Adaptation" level of the 5C architecture where the CPS can autonomously adjust gate positions based on real-time and predictive data.
+    \item \textbf{Comparative Level-Sensing Analysis:} We plan to conduct comparative experiments between ultrasonic distance sensors and hydrostatic pressure sensors. By evaluating the performance of each individually and testing a hybrid configuration (using both sensors simultaneously), we aim to determine which solution provides the highest reliability under varying conditions, such as surface turbulence or debris interference.
+    \item \textbf{Real-Dam Adaptation:} The final stage of development involves scaling the communication infrastructure from Wi-Fi to LoRaWAN to meet the range requirements of a real dam site. This phase will also include adapting the software logic to handle the massive data throughput and environmental complexities inherent in large-scale hydroelectric operations.
+\end{itemize}
