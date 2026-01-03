@@ -12,6 +12,10 @@
 \usepackage{graphicx}
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
+
+\usepackage{orcidlink}
+\newcommand{\iconOrcidID}[1]{\href{https://orcid.org/#1}{\orcidlink{#1}}}
+
 %
 % If you use the hyperref package, please uncomment the following two lines
 % to display URLs in blue roman font according to Springer's eBook style:
@@ -28,11 +32,11 @@
 % an abbreviated paper title here
 %
 \author{
-    Alexandre Cunha\orcidID{0009-0005-9408-5221} \and
+    Alexandre Cunha\iconOrcidID{0009-0005-9408-5221} \and
     Artur Oliveria\orcidID{1111-2222-3333-4444} \and
     Diogo Fernandes\orcidID{2222--3333-4444-5555}\and
     Diogo Silva\orcidID{2222--3333-4444-5555} \and
-    Félix Martins\orcidID{2222--3333-4444-5555} \and
+    Félix Martins\iconOrcidID{0009-0004-7549-1497} \and
     Gonçalo Santos\orcidID{2222--3333-4444-5555} \and
     Pedro Barbeira\orcidID{2222--3333-4444-5555}
 }
@@ -48,12 +52,11 @@
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-Hydroelectric dams are crucial infrastructures for water supply and electricity generation but face significant operational risks from extreme weather, including flooding during heavy rainfall and reduced production during droughts. Current monitoring methods are often manual or outdated, necessitating the development of smart, autonomous, and remote solutions. This paper presents a Cyber-Physical System (CPS) and Internet of Things (IoT) framework designed for real-time dam monitoring and control. The proposed architecture is mapped to a 5-layer IoT stack and the 5C CPS functional model, utilizing Arduino Nano ESP32 controllers for perception and a Raspberry Pi gateway running Node-RED, RabbitMQ, and InfluxDB. Data management follows an "Atomic Messaging" philosophy via the MQTT protocol to ensure high scalability and time-series optimization. To enhance operational intelligence, a Gradient Boosting Machine (GBM) model was integrated to predict daily inflow and outflow trends using historical hydrological data and weather forecasts. Some constraints in the prototype led us to use alternatives but the system successfully validates decision support logic through a real-time Node-RED dashboard. The results provide a robust and secure foundation for adapting integrated CPS technologies to large-scale hydroelectric environments.
+Hydroelectric dams are crucial infrastructures for water supply and electricity generation but face significant operational risks from extreme weather, including flooding during heavy rainfall and reduced energy production during droughts. Current monitoring methods are often manual or outdated, requiring the development of smart, autonomous, and remote solutions. This work presents a Cyber-Physical System (CPS) and Internet of Things (IoT) framework designed for real-time dam monitoring and control. The proposed architecture is mapped to a 5-layer IoT stack and the 5C CPS functional model, using Arduino Nano ESP32 controllers for perception and a Raspberry Pi gateway running Node-RED, RabbitMQ, and InfluxDB. Data management follows an Atomic Messaging philosophy via the MQTT protocol to ensure high scalability and time-series optimization. To enhance operational intelligence, a Gradient Boosting Machine (GBM) model was integrated to predict daily inflow and outflow trends using historical hydrological data and weather forecasts. We implemented a proof-of-concept prototype that successfully validates decision support logic via a real-time Node-RED dashboard. The results provide a robust and secure foundation for adapting integrated CPS technologies to large-scale hydroelectric environments.
 \keywords{Cyber-Physical Systems (CPS)  \and Internet of Things (IoT) \and Hydroelectric Dam Monitoring.}
 \end{abstract}
-%
-%
-%
+
+
 \input{Chapters/Chapter1}
 \include{Chapters/Chapter2}
 \include{Chapters/Chapter3}
@@ -84,29 +87,8 @@ Company X and owns stock in Company Y. Author C is a member of committee Z.
 % BibTeX users should specify bibliography style 'splncs04'.
 % References will then be sorted and formatted in the correct style.
 %
-% \bibliographystyle{splncs04}
-% \bibliography{mybibliography}
-%
-\begin{thebibliography}{8}
+\bibliographystyle{splncs04}
+\bibliography{bibliography}
 
 
-\bibitem{ref_portuguese_legislation_2018}
-República Portuguesa: Decreto-Lei n.\textsuperscript{o} 21/2018, de 28 de março — Aprova o regime de segurança de barragens e o Regulamento de Pequenas Barragens. In: \textit{Diário da República}, 1.\textsuperscript{a} série, n.\textsuperscript{o} 62, pp. 1368--1394. Imprensa Nacional-Casa da Moeda, Lisboa (2018)
-
-%\bibitem{ref_lncs1}
-%Author, F., Author, S.: Title of a proceedings paper. In: Editor,
-%F., Editor, S. (eds.) CONFERENCE 2016, LNCS, vol. 9999, pp. 1--13.
-%Springer, Heidelberg (2016). \doi{10.10007/1234567890}
-%
-%\bibitem{ref_book1}
-%Author, F., Author, S., Author, T.: Book title. 2nd edn. Publisher,
-%Location (1999)
-%
-%\bibitem{ref_proc1}
-%Author, A.-B.: Contribution title. In: 9th International Proceedings
-%on Proceedings, pp. 1--2. Publisher, Location (2010)
-%
-%\bibitem{ref_url1}
-%LNCS Homepage, \url{http://www.springer.com/lncs}, last accessed 2023/10/25
-\end{thebibliography}
 \end{document}
