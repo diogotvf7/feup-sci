@@ -24,6 +24,22 @@
         "env": []
     },
     {
+        "id": "f279411eb433cfda",
+        "type": "tab",
+        "label": "Dynamo tables",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a29502919b85aa46",
+        "type": "tab",
+        "label": "Pluviometer table",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "61b3cab9e50b62c7",
         "type": "group",
         "z": "8350cc1f7811e02f",
@@ -309,20 +325,6 @@
         "groupType": "default"
     },
     {
-        "id": "9a69b0ccd08c2320",
-        "type": "ui-group",
-        "name": "Flow Rate",
-        "page": "8bed4b15e20bbd72",
-        "width": "3",
-        "height": "3",
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
         "id": "8bed4b15e20bbd72",
         "type": "ui-page",
         "name": "Flow Rate",
@@ -353,7 +355,121 @@
                 "cols": "12"
             }
         ],
+        "order": 6,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "9a69b0ccd08c2320",
+        "type": "ui-group",
+        "name": "Flow Rate",
+        "page": "8bed4b15e20bbd72",
+        "width": "3",
+        "height": "3",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "0692d2c876059e19",
+        "type": "ui-group",
+        "name": "Pluviometer",
+        "page": "b3c8a59b118a6f3d",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "d66fdbd45eff537c",
+        "type": "ui-group",
+        "name": "Dynamo",
+        "page": "9d696326f1cc62b0",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "b3c8a59b118a6f3d",
+        "type": "ui-page",
+        "name": "Pluviometer",
+        "ui": "f9b499d34c1cba03",
+        "path": "/page3",
+        "icon": "",
+        "layout": "grid",
+        "theme": "9dd7ed5c0bad9357",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
         "order": 4,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "9d696326f1cc62b0",
+        "type": "ui-page",
+        "name": "Dynamo",
+        "ui": "f9b499d34c1cba03",
+        "path": "/page4",
+        "icon": "",
+        "layout": "grid",
+        "theme": "9dd7ed5c0bad9357",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 5,
         "className": "",
         "visible": "true",
         "disabled": "false"
@@ -1255,7 +1371,7 @@
         "type": "function",
         "z": "122b6eb0d33a29f5",
         "name": "Format to Chart",
-        "func": "const sensorNames = {\n    \"3ade6e09-3365-45a2-abca-1a01611ab078\": \"Tank Main\",\n    \"99999999-aaaa-bbbb-cccc-dddddddddddd\": \"Tank Backup\"\n};\n\nif (!Array.isArray(msg.payload)) return null;\n\n\nnode.send({ payload: [], reset: true });\n\nmsg.payload.forEach(p => {\n    node.send({\n        topic: sensorNames[p.sensor_id] || p.sensor_id,\n        payload: {\n            x: new Date(p._time).getTime(),\n            y: Number(p._value)\n        }\n    });\n});\n\nreturn null;",
+        "func": "const sensorNames = {\n    \"3ade6e09-3365-45a2-abca-1a01611ab078\": \"Tank Main Sensor\",\n    \"99999999-aaaa-bbbb-cccc-dddddddddddd\": \"Tank Backup Sensor\"\n};\n\nif (!Array.isArray(msg.payload)) return null;\n\n\nnode.send({ payload: [], reset: true });\n\nmsg.payload.forEach(p => {\n    node.send({\n        topic: sensorNames[p.sensor_id] || p.sensor_id,\n        payload: {\n            x: new Date(p._time).getTime(),\n            y: Number(p._value)\n        }\n    });\n});\n\nreturn null;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -1473,6 +1589,1681 @@
         "className": "",
         "x": 1470,
         "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4878139195624813",
+        "type": "ui-chart",
+        "z": "f279411eb433cfda",
+        "group": "d66fdbd45eff537c",
+        "name": "Energy produced vs Time",
+        "label": "chart",
+        "order": 4,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "mw_produced",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "500",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "line",
+        "pointRadius": "4",
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 1690,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7f3c113001477002",
+        "type": "ui-chart",
+        "z": "f279411eb433cfda",
+        "group": "d66fdbd45eff537c",
+        "name": "Efficiency in energy production",
+        "label": "chart",
+        "order": 6,
+        "chartType": "bar",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "timestamp",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "category",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "mw_produced/flow_rate",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "10",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "line",
+        "pointRadius": "4",
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 2170,
+        "y": 1260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b74ace116c631cad",
+        "type": "ui-gauge",
+        "z": "f279411eb433cfda",
+        "name": "Energy produced",
+        "group": "d66fdbd45eff537c",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "gauge",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "units",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "4",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "7",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": 10,
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 1130,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "163a3b55d3b22ea3",
+        "type": "inject",
+        "z": "f279411eb433cfda",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 880,
+        "wires": [
+            [
+                "5d346a99138cdccd"
+            ]
+        ]
+    },
+    {
+        "id": "5d346a99138cdccd",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Publish total",
+        "func": "msg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: - 1h)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"dynamo\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> aggregateWindow(every: 1h, fn: mean, createEmpty: false)\n`;\n\nmsg.payload = msg.query;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 880,
+        "wires": [
+            [
+                "aab9f104ae47e501",
+                "3c4b1ef93c7f356d"
+            ]
+        ]
+    },
+    {
+        "id": "aab9f104ae47e501",
+        "type": "debug",
+        "z": "f279411eb433cfda",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "63019242d6b87198",
+        "type": "inject",
+        "z": "f279411eb433cfda",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 500,
+        "wires": [
+            [
+                "1ed35d2dfe67cb41"
+            ]
+        ]
+    },
+    {
+        "id": "1ed35d2dfe67cb41",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Dynamo_live gate",
+        "func": "if (flow.get(\"dynamo_live\")){\n  msg.query = `\n  from(bucket: \"iot_data\")\n    |> range(start: 0)\n    |> filter(fn: (r) => r[\"_measurement\"] == \"dynamo\")\n    |> filter(fn: (r) => r[\"_field\"] == \"value\")\n    |> last()\n  `;\n\n  msg.payload = msg.query;\n  return msg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 500,
+        "wires": [
+            [
+                "4a338508c5fd72b9"
+            ]
+        ]
+    },
+    {
+        "id": "4a338508c5fd72b9",
+        "type": "influxdb in",
+        "z": "f279411eb433cfda",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 740,
+        "y": 480,
+        "wires": [
+            [
+                "38c24e3684987837",
+                "13809cded5866403"
+            ]
+        ]
+    },
+    {
+        "id": "38c24e3684987837",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Update Sender",
+        "func": "let data = msg.payload;\n\nif (data && data[0]._time != flow.get(\"dynamo_last_val\")) {\n    let point = data[0];\n\n    flow.set(\"dynamo_last_val\", point._timestamp)\n\n    return {\n        topic: \"energy_produced\",\n        payload: Number(point._value),\n        timestamp: new Date(point._time).getTime()\n    };\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 460,
+        "wires": [
+            [
+                "4878139195624813",
+                "5b235107f88e4194"
+            ]
+        ]
+    },
+    {
+        "id": "38d70ca987e6e8f7",
+        "type": "ui-form",
+        "z": "f279411eb433cfda",
+        "name": "Windows Range Picker Dynamo",
+        "group": "d66fdbd45eff537c",
+        "label": "",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Time Preset",
+                "key": "Preset",
+                "type": "dropdown",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "Preset": ""
+        },
+        "payload": "",
+        "submit": "Submit Query",
+        "cancel": "Clear",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "Preset",
+                "value": "Live",
+                "label": "Live Update"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "0",
+                "label": "Custom Range"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "30m",
+                "label": "Last 30 Minutes"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "1h",
+                "label": "Last 1 Hour"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "2h",
+                "label": "Last 2 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "5h",
+                "label": "Last 5 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "10h",
+                "label": "Last 10 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "12h",
+                "label": "Last 12 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "24h",
+                "label": "Last 24 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "48h",
+                "label": "Last 48 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "7d",
+                "label": "Last 1 Week"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "30d",
+                "label": "Last 1 Month"
+            }
+        ],
+        "x": 130,
+        "y": 340,
+        "wires": [
+            [
+                "0af43074ea48d3ea"
+            ]
+        ]
+    },
+    {
+        "id": "0af43074ea48d3ea",
+        "type": "switch",
+        "z": "f279411eb433cfda",
+        "name": "",
+        "property": "payload[\"Preset\"]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Live",
+                "vt": "str"
+            },
+            {
+                "t": "neq",
+                "v": "Live",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 370,
+        "y": 320,
+        "wires": [
+            [
+                "ae3a40986d397636"
+            ],
+            [
+                "63402c59352d4898"
+            ]
+        ]
+    },
+    {
+        "id": "ae3a40986d397636",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Live_switch_dynamo",
+        "func": "flow.set(\"dynamo_live\", true);\n//loads last 30min before starting the live update\nmsg.timePreset = \"30m\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 260,
+        "wires": [
+            [
+                "cd1c543484f09f83"
+            ]
+        ]
+    },
+    {
+        "id": "63402c59352d4898",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Time Preset extractor",
+        "func": "const preset = msg.payload[\"Preset\"];\nflow.set(\"dynamo_live\", false);\n\nmsg.timePreset = preset;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 340,
+        "wires": [
+            [
+                "cd1c543484f09f83"
+            ]
+        ]
+    },
+    {
+        "id": "cd1c543484f09f83",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "query_builder_dynamo",
+        "func": "let range;\n\nif (!msg.timePreset || msg.timePreset == 0) {\n  range = 'range(start: 0)';\n} else {\n  range = `range(start: - ${msg.timePreset})`;\n}\n\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> ${range}\n  |> filter(fn: (r) => r[\"_measurement\"] == \"dynamo\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n`;\n\nmsg.payload = msg.query;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 340,
+        "wires": [
+            [
+                "06baff44ce198720"
+            ]
+        ]
+    },
+    {
+        "id": "06baff44ce198720",
+        "type": "influxdb in",
+        "z": "f279411eb433cfda",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1060,
+        "y": 320,
+        "wires": [
+            [
+                "21809eeeefc5019c"
+            ]
+        ]
+    },
+    {
+        "id": "21809eeeefc5019c",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Table converter dynamo",
+        "func": "let data = msg.payload;\n\n// Create array of messages to send\nlet messages = [];\n\n// First message clears the chart\nmessages.push({\n    topic: \"energy_produced\",\n    payload: []\n});\n\n// Add each data point as a separate message\ndata.forEach(point => {\n    messages.push({\n        topic: \"energy_produced\",\n        payload: Number(point._value),\n        timestamp: new Date(point._time)\n    });\n});\n\n// Send all messages\nmessages.forEach(m => node.send(m));\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1370,
+        "y": 340,
+        "wires": [
+            [
+                "4878139195624813"
+            ]
+        ]
+    },
+    {
+        "id": "5b235107f88e4194",
+        "type": "debug",
+        "z": "f279411eb433cfda",
+        "name": "debug 7",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1400,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "13809cded5866403",
+        "type": "debug",
+        "z": "f279411eb433cfda",
+        "name": "debug 8",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1000,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "591ecaa24bda3976",
+        "type": "ui-button",
+        "z": "f279411eb433cfda",
+        "group": "d66fdbd45eff537c",
+        "name": "Update",
+        "label": "Update",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "emulateClick": false,
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "iconPosition": "left",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 140,
+        "y": 940,
+        "wires": [
+            [
+                "5d346a99138cdccd"
+            ]
+        ]
+    },
+    {
+        "id": "3c4b1ef93c7f356d",
+        "type": "influxdb in",
+        "z": "f279411eb433cfda",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 520,
+        "y": 820,
+        "wires": [
+            [
+                "6915c598ffbc1385"
+            ]
+        ]
+    },
+    {
+        "id": "6915c598ffbc1385",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Extract and Round data",
+        "func": "let data = msg.payload[0]._value\ndata = Math.round(Number(data) * 100) / 100\nmsg.payload = data\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 820,
+        "wires": [
+            [
+                "b74ace116c631cad"
+            ]
+        ]
+    },
+    {
+        "id": "19ef6a6270808a99",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "query_builder_dynamo_2",
+        "func": "let range;\n\nif (!msg.timePreset || msg.timePreset == 0) {\n  range = 'range(start: 0)';\n} else {\n  range = `range(start: -${msg.timePreset})`;\n}\n\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> ${range}\n  |> filter(fn: (r) => r[\"_measurement\"] == \"dynamo\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> aggregateWindow(every: 1m, fn: mean, createEmpty: true)\n`;\n\nmsg.topic = \"dynamo\";\nmsg.payload = msg.query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 1060,
+        "wires": [
+            [
+                "cf18b84881acf468",
+                "bac836dc792d817b"
+            ]
+        ]
+    },
+    {
+        "id": "5d982b36ea092939",
+        "type": "ui-form",
+        "z": "f279411eb433cfda",
+        "name": "Windows Range Picker Efficency",
+        "group": "d66fdbd45eff537c",
+        "label": "",
+        "order": 5,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Time Preset",
+                "key": "Preset",
+                "type": "dropdown",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "Preset": ""
+        },
+        "payload": "",
+        "submit": "Submit Query",
+        "cancel": "Clear",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "Preset",
+                "value": "Live",
+                "label": "Live Update"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "0",
+                "label": "Custom Range"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "30m",
+                "label": "Last 30 Minutes"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "1h",
+                "label": "Last 1 Hour"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "2h",
+                "label": "Last 2 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "5h",
+                "label": "Last 5 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "10h",
+                "label": "Last 10 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "12h",
+                "label": "Last 12 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "24h",
+                "label": "Last 24 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "48h",
+                "label": "Last 48 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "7d",
+                "label": "Last 1 Week"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "30d",
+                "label": "Last 1 Month"
+            }
+        ],
+        "x": 140,
+        "y": 1160,
+        "wires": [
+            [
+                "95310822aa37f722"
+            ]
+        ]
+    },
+    {
+        "id": "95310822aa37f722",
+        "type": "switch",
+        "z": "f279411eb433cfda",
+        "name": "",
+        "property": "payload[\"Preset\"]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Live",
+                "vt": "str"
+            },
+            {
+                "t": "neq",
+                "v": "Live",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 350,
+        "y": 1160,
+        "wires": [
+            [
+                "ed9689d0dc32645f"
+            ],
+            [
+                "4b3689aa3c4e9aac"
+            ]
+        ]
+    },
+    {
+        "id": "4b3689aa3c4e9aac",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Time Preset extractor",
+        "func": "const preset = msg.payload[\"Preset\"];\nflow.set(\"efficiency_live\", false);\nflow.set(\"efficiency_live_dynamo\", null);\nflow.set(\"efficiency_live_water\", null);\nflow.set(\"last_dynamo_time\", null);\nflow.set(\"last_water_time\", null);\n\nmsg.timePreset = preset;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 1160,
+        "wires": [
+            [
+                "19ef6a6270808a99",
+                "a1fbde1dc024bc70"
+            ]
+        ]
+    },
+    {
+        "id": "cf18b84881acf468",
+        "type": "influxdb in",
+        "z": "f279411eb433cfda",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1320,
+        "y": 1100,
+        "wires": [
+            [
+                "28c2f7eb18d484a7"
+            ]
+        ]
+    },
+    {
+        "id": "42185668cf11740b",
+        "type": "debug",
+        "z": "f279411eb433cfda",
+        "name": "debug 9",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1820,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "a1fbde1dc024bc70",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "query_builder_flow_rate",
+        "func": "let range;\n\nif (!msg.timePreset || msg.timePreset == 0) {\n  range = 'range(start: 0)';\n} else {\n  range = `range(start: -${msg.timePreset})`;\n}\n\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> ${range}\n  |> filter(fn: (r) => r[\"_measurement\"] == \"flow_rate\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> aggregateWindow(every: 1m, fn: mean, createEmpty: true)\n`;\n\nmsg.topic = \"flow_rate\";\nmsg.payload = msg.query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 1180,
+        "wires": [
+            [
+                "1e2812d20ba23a70"
+            ]
+        ]
+    },
+    {
+        "id": "28c2f7eb18d484a7",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Efficiency calculator",
+        "func": "// Store data from each query\nlet dynamoData = flow.get(\"efficiency_dynamo_data\");\nlet waterData = flow.get(\"efficiency_water_data\");\n\n// Store incoming data based on topic\nif (msg.topic === \"dynamo\") {\n    flow.set(\"efficiency_dynamo_data\", msg.payload);\n    dynamoData = msg.payload;\n} else if (msg.topic === \"flow_rate\") {\n    flow.set(\"efficiency_water_data\", msg.payload);\n    waterData = msg.payload;\n} else {\n    return null;\n}\n\n// Wait until we have both datasets\nif (!dynamoData || !waterData || dynamoData.length === 0 || waterData.length === 0) {\n    return null;\n}\n\n// Create lookup map for water data by timestamp\nlet waterMap = {};\nwaterData.forEach(w => {\n    let timeKey = new Date(w._time).getTime();\n    // Round to nearest minute to handle slight differences\n    timeKey = Math.floor(timeKey / 60000) * 60000;\n    waterMap[timeKey] = w._value;\n});\n\n// Calculate efficiency for matching timestamps\nlet efficiencyData = [];\ndynamoData.forEach(d => {\n    let timeKey = new Date(d._time).getTime();\n    timeKey = Math.floor(timeKey / 60000) * 60000;\n    \n    if (waterMap[timeKey] && waterMap[timeKey] > 0) {\n        efficiencyData.push({\n            _time: d._time,\n            _value: d._value / waterMap[timeKey]\n        });\n    }\n});\n\n// Clear stored data\nflow.set(\"efficiency_dynamo_data\", null);\nflow.set(\"efficiency_water_data\", null);\n\nmsg.payload = efficiencyData;\nmsg.topic = \"efficiency_calculated\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1550,
+        "y": 1140,
+        "wires": [
+            [
+                "42185668cf11740b",
+                "ecbe977dfea11a91"
+            ]
+        ]
+    },
+    {
+        "id": "1e2812d20ba23a70",
+        "type": "influxdb in",
+        "z": "f279411eb433cfda",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1320,
+        "y": 1200,
+        "wires": [
+            [
+                "28c2f7eb18d484a7"
+            ]
+        ]
+    },
+    {
+        "id": "ecbe977dfea11a91",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Table Converter",
+        "func": "let data = msg.payload;\nlet messages = [];\n\n// Clear the chart first\nmessages.push({\n    topic: \"Efficiency\",\n    payload: []\n});\n\n// Add all historical data points\ndata.forEach(point => {\n    let timestamp = new Date(point._time);\n    let timeLabel = timestamp.toLocaleTimeString('en-GB', { \n        hour: '2-digit', \n        minute: '2-digit' \n    });\n\n    messages.push({\n        topic: \"Efficiency\",\n        payload: Math.round(Number(point._value) * 100) / 100,\n        timestamp: timeLabel\n    });\n});\n\nmessages.forEach(m => node.send(m));\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1800,
+        "y": 1180,
+        "wires": [
+            [
+                "7f3c113001477002",
+                "b802446dd1e05a53"
+            ]
+        ]
+    },
+    {
+        "id": "b802446dd1e05a53",
+        "type": "debug",
+        "z": "f279411eb433cfda",
+        "name": "debug 10",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 2020,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "e939c2e8af694eed",
+        "type": "inject",
+        "z": "f279411eb433cfda",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 1340,
+        "wires": [
+            [
+                "48de512f32d9989c"
+            ]
+        ]
+    },
+    {
+        "id": "48de512f32d9989c",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Efficiency Live gate",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 1340,
+        "wires": [
+            [
+                "aff5a2fed67bf36c",
+                "011965742ff735cc"
+            ]
+        ]
+    },
+    {
+        "id": "ed9689d0dc32645f",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Efficiency Live Switch",
+        "func": "flow.set(\"efficiency_live\", true);\n// loads last 30min instead of all the data because of memory heap error (too many data to load)\nmsg.timePreset = \"30m\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 1060,
+        "wires": [
+            [
+                "a1fbde1dc024bc70",
+                "19ef6a6270808a99",
+                "3e1234376e71e514"
+            ]
+        ]
+    },
+    {
+        "id": "aff5a2fed67bf36c",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "query_builder_dynamo_get_last_min",
+        "func": "let range;\n\nif (!msg.timePreset || msg.timePreset == 0) {\n  range = 'range(start: 0)';\n} else {\n  range = `range(start: -${msg.timePreset})`;\n}\n\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> ${range}\n  |> filter(fn: (r) => r[\"_measurement\"] == \"dynamo\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> aggregateWindow(every: 1m, fn: mean, createEmpty: true)\n  |> last()\n`;\n\nmsg.topic = \"dynamo\";\nmsg.payload = msg.query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 1280,
+        "wires": [
+            [
+                "a05fef4ba9b095b4"
+            ]
+        ]
+    },
+    {
+        "id": "011965742ff735cc",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "query_builder_flow_rate_get_last_min",
+        "func": "let range;\n\nif (!msg.timePreset || msg.timePreset == 0) {\n  range = 'range(start: 0)';\n} else {\n  range = `range(start: -${msg.timePreset})`;\n}\n\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> ${range}\n  |> filter(fn: (r) => r[\"_measurement\"] == \"flow_rate\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> aggregateWindow(every: 1m, fn: mean, createEmpty: true)\n  |> last()\n`;\n\nmsg.topic = \"flow_rate\";\nmsg.payload = msg.query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 1400,
+        "wires": [
+            [
+                "b2c5283e4e4ebf24"
+            ]
+        ]
+    },
+    {
+        "id": "a05fef4ba9b095b4",
+        "type": "influxdb in",
+        "z": "f279411eb433cfda",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1100,
+        "y": 1280,
+        "wires": [
+            [
+                "6fc47d608ec44fe0"
+            ]
+        ]
+    },
+    {
+        "id": "b2c5283e4e4ebf24",
+        "type": "influxdb in",
+        "z": "f279411eb433cfda",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1100,
+        "y": 1400,
+        "wires": [
+            [
+                "6fc47d608ec44fe0"
+            ]
+        ]
+    },
+    {
+        "id": "6fc47d608ec44fe0",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Efficiency calculator Live version",
+        "func": "// Store data from each query\nlet dynamoData = flow.get(\"efficiency_live_dynamo\");\nlet waterData = flow.get(\"efficiency_live_water\");\nlet lastDynamoTime = flow.get(\"last_dynamo_time\");\nlet lastWaterTime = flow.get(\"last_water_time\");\n\n// Store incoming data based on topic\nif (msg.topic === \"dynamo\") {\n    if (msg.payload && msg.payload.length > 0) {\n        let newTime = new Date(msg.payload[0]._time).getTime();\n\n        // Only update if this is new data\n        if (newTime !== lastDynamoTime) {\n            flow.set(\"efficiency_live_dynamo\", msg.payload[0]);\n            flow.set(\"last_dynamo_time\", newTime);\n            dynamoData = msg.payload[0];\n        } else {\n            // No new data, don't proceed\n            return null;\n        }\n    } else {\n        return null;\n    }\n} else if (msg.topic === \"flow_rate\") {\n    if (msg.payload && msg.payload.length > 0) {\n        let newTime = new Date(msg.payload[0]._time).getTime();\n\n        // Only update if this is new data\n        if (newTime !== lastWaterTime) {\n            flow.set(\"efficiency_live_water\", msg.payload[0]);\n            flow.set(\"last_water_time\", newTime);\n            waterData = msg.payload[0];\n        } else {\n            // No new data, don't proceed\n            return null;\n        }\n    } else {\n        return null;\n    }\n} else {\n    return null;\n}\n\n// Check if we have both datasets\nif (!dynamoData || !waterData) {\n    return null;\n}\n\n// Check if at least one of them was just updated\nlet dynamoTime = new Date(dynamoData._time).getTime();\nlet waterTime = new Date(waterData._time).getTime();\n\n// Use the most recent timestamp\nlet mostRecentTime = Math.max(dynamoTime, waterTime);\n\n// Check if water value is valid\nif (waterData._value <= 0) {\n    return null;\n}\n\n// Calculate efficiency\nlet efficiency = dynamoData._value / waterData._value;\n\nreturn {\n    payload: [{\n        _time: new Date(mostRecentTime).toISOString(),\n        _value: efficiency\n    }],\n    topic: \"efficiency_calculated\"\n};",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1450,
+        "y": 1340,
+        "wires": [
+            [
+                "4d9725d7043c15da"
+            ]
+        ]
+    },
+    {
+        "id": "4d9725d7043c15da",
+        "type": "function",
+        "z": "f279411eb433cfda",
+        "name": "Update Sender Efficiency",
+        "func": "let data = msg.payload;\n\nif (!data || data.length === 0) {\n    return null;\n}\n\n// Send each new data point\ndata.forEach(point => {\n    let timestamp = new Date(point._time);\n    let timeLabel = timestamp.toLocaleTimeString('en-GB', {\n        hour: '2-digit',\n        minute: '2-digit'\n    });\n\n    node.send({\n        topic: \"Efficiency\",\n        payload: Math.round(Number(point._value) * 100) / 100,\n        timestamp: timeLabel\n    });\n});\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1770,
+        "y": 1340,
+        "wires": [
+            [
+                "7f3c113001477002"
+            ]
+        ]
+    },
+    {
+        "id": "3e1234376e71e514",
+        "type": "debug",
+        "z": "f279411eb433cfda",
+        "name": "debug 11",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "bac836dc792d817b",
+        "type": "debug",
+        "z": "f279411eb433cfda",
+        "name": "debug 12",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1240,
+        "y": 1020,
+        "wires": []
+    },
+    {
+        "id": "34c8833e10a36fe0",
+        "type": "function",
+        "z": "a29502919b85aa46",
+        "name": "Table converter Pluviometer",
+        "func": "let data = msg.payload;\n\n// Create array of messages to send\nlet messages = [];\n\n// First message clears the chart\nmessages.push({\n    topic: \"rainfall\",\n    payload: []\n});\n\n// Add each data point as a separate message\ndata.forEach(point => {\n    messages.push({\n        topic: \"rainfall\",\n        payload: Number(point._value),\n        timestamp: new Date(point._time)\n    });\n});\n\n// Send all messages\nmessages.forEach(m => node.send(m));\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1480,
+        "y": 300,
+        "wires": [
+            [
+                "429a713004e1883a",
+                "77e850b5e645eb40"
+            ]
+        ]
+    },
+    {
+        "id": "3138a9a995d5a215",
+        "type": "function",
+        "z": "a29502919b85aa46",
+        "name": "query_builder_pluviometer",
+        "func": "let range;\n\nif (!msg.timePreset || msg.timePreset == 0) {\n  range = 'range(start: 0)';\n} else {\n  range = `range(start: - ${msg.timePreset})`;\n}\n\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> ${range}\n  |> filter(fn: (r) => r[\"_measurement\"] == \"pluviometer\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n`;\n\nmsg.payload = msg.query;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 320,
+        "wires": [
+            [
+                "931dd7e3f4112d96"
+            ]
+        ]
+    },
+    {
+        "id": "931dd7e3f4112d96",
+        "type": "influxdb in",
+        "z": "a29502919b85aa46",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1220,
+        "y": 300,
+        "wires": [
+            [
+                "34c8833e10a36fe0"
+            ]
+        ]
+    },
+    {
+        "id": "2ef4496d74902af5",
+        "type": "function",
+        "z": "a29502919b85aa46",
+        "name": "Time Preset extractor",
+        "func": "const preset = msg.payload[\"Preset\"];\nflow.set(\"pluviometer_live\", false);\n\nmsg.timePreset = preset;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 320,
+        "wires": [
+            [
+                "33582bb5c6cf7643",
+                "3138a9a995d5a215"
+            ]
+        ]
+    },
+    {
+        "id": "79f885b8fd201ce7",
+        "type": "inject",
+        "z": "a29502919b85aa46",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 310,
+        "y": 440,
+        "wires": [
+            [
+                "adcd7de47ba6c856"
+            ]
+        ]
+    },
+    {
+        "id": "adcd7de47ba6c856",
+        "type": "function",
+        "z": "a29502919b85aa46",
+        "name": "Pluviometer_live gate",
+        "func": "if (flow.get(\"pluviometer_live\")){\n  msg.query = `\n  from(bucket: \"iot_data\")\n    |> range(start: 0)\n    |> filter(fn: (r) => r[\"_measurement\"] == \"pluviometer\")\n    |> filter(fn: (r) => r[\"_field\"] == \"value\")\n    |> last()\n  `;\n\n  msg.payload = msg.query;\n  return msg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 440,
+        "wires": [
+            [
+                "be3a6ed83282af78"
+            ]
+        ]
+    },
+    {
+        "id": "9e1276e21ced875c",
+        "type": "switch",
+        "z": "a29502919b85aa46",
+        "name": "",
+        "property": "payload[\"Preset\"]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Live",
+                "vt": "str"
+            },
+            {
+                "t": "neq",
+                "v": "Live",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 350,
+        "y": 280,
+        "wires": [
+            [
+                "266e7db1676907a2"
+            ],
+            [
+                "2ef4496d74902af5"
+            ]
+        ]
+    },
+    {
+        "id": "266e7db1676907a2",
+        "type": "function",
+        "z": "a29502919b85aa46",
+        "name": "Live_switch_pluviometer",
+        "func": "flow.set(\"pluviometer_live\", true);\n//loads last 30min before starting the live update\nmsg.timePreset = \"30m\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 220,
+        "wires": [
+            [
+                "f2d5fed10402163b",
+                "3138a9a995d5a215"
+            ]
+        ]
+    },
+    {
+        "id": "f2d5fed10402163b",
+        "type": "debug",
+        "z": "a29502919b85aa46",
+        "name": "debug 13",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "4c234df4900d410f",
+        "type": "debug",
+        "z": "a29502919b85aa46",
+        "name": "debug 14",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "33582bb5c6cf7643",
+        "type": "debug",
+        "z": "a29502919b85aa46",
+        "name": "debug 15",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "be3a6ed83282af78",
+        "type": "influxdb in",
+        "z": "a29502919b85aa46",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 880,
+        "y": 440,
+        "wires": [
+            [
+                "4c234df4900d410f",
+                "5ec70c3a81b9df07"
+            ]
+        ]
+    },
+    {
+        "id": "5ec70c3a81b9df07",
+        "type": "function",
+        "z": "a29502919b85aa46",
+        "name": "Update Sender",
+        "func": "let data = msg.payload;\n\nif (data && data[0]._time != flow.get(\"pluviometer_last_val\")) {\n    let point = data[0];\n\n    flow.set(\"pluviometer_last_val\", point._timestamp)\n\n    return {\n        topic: \"rainfall\",\n        payload: Number(point._value),\n        timestamp: new Date(point._time).getTime()\n    };\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1280,
+        "y": 420,
+        "wires": [
+            [
+                "429a713004e1883a",
+                "9e17948ab53803d9"
+            ]
+        ]
+    },
+    {
+        "id": "9e17948ab53803d9",
+        "type": "debug",
+        "z": "a29502919b85aa46",
+        "name": "debug 16",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1460,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "8dee811dcf11d265",
+        "type": "ui-form",
+        "z": "a29502919b85aa46",
+        "name": "Windows Range Picker Pluviometer",
+        "group": "0692d2c876059e19",
+        "label": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Time Preset",
+                "key": "Preset",
+                "type": "dropdown",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "Preset": ""
+        },
+        "payload": "",
+        "submit": "Submit Query",
+        "cancel": "Clear",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "Preset",
+                "value": "Live",
+                "label": "Live Update"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "0",
+                "label": "Custom Range"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "30m",
+                "label": "Last 30 Minutes"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "1h",
+                "label": "Last 1 Hour"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "2h",
+                "label": "Last 2 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "5h",
+                "label": "Last 5 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "10h",
+                "label": "Last 10 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "12h",
+                "label": "Last 12 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "24h",
+                "label": "Last 24 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "48h",
+                "label": "Last 48 Hours"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "7d",
+                "label": "Last 1 Week"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "30d",
+                "label": "Last 1 Month"
+            }
+        ],
+        "x": 140,
+        "y": 320,
+        "wires": [
+            [
+                "9e1276e21ced875c"
+            ]
+        ]
+    },
+    {
+        "id": "77e850b5e645eb40",
+        "type": "debug",
+        "z": "a29502919b85aa46",
+        "name": "debug 17",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1620,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "429a713004e1883a",
+        "type": "ui-chart",
+        "z": "a29502919b85aa46",
+        "group": "0692d2c876059e19",
+        "name": "Inflow from rain vs Time",
+        "label": "chart",
+        "order": 2,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "timestamp",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Rain Inflow",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "500",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "line",
+        "pointRadius": "4",
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 1710,
+        "y": 380,
         "wires": [
             []
         ]
