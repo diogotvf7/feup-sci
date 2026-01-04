@@ -16,7 +16,15 @@
         "env": []
     },
     {
-        "id": "group_logging",
+        "id": "122b6eb0d33a29f5",
+        "type": "tab",
+        "label": "Temporal Water Level",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "61b3cab9e50b62c7",
         "type": "group",
         "z": "8350cc1f7811e02f",
         "name": "Data Ingestion & Logging",
@@ -26,14 +34,14 @@
             "label": true
         },
         "nodes": [
-            "json_parser",
-            "mqtt_in_node",
-            "transform_for_influx",
-            "influxdb_node",
-            "influxdb_stub"
+            "894106aba3e21409",
+            "d7d620bbd29a5d20",
+            "425cf587a373a3e2",
+            "cc62b281b9e13b32",
+            "42a30455316dd6a2"
         ],
         "x": 374,
-        "y": 59,
+        "y": 139,
         "w": 992,
         "h": 162
     },
@@ -186,20 +194,6 @@
         "disabled": "false"
     },
     {
-        "id": "121ee8e7538ae057",
-        "type": "ui-group",
-        "name": "Group 1",
-        "page": "024d435ef38f59f9",
-        "width": 6,
-        "height": 1,
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": true,
-        "disabled": false,
-        "groupType": "default"
-    },
-    {
         "id": "f6262b9f338d1e1f",
         "type": "ui-theme",
         "name": "Default Theme",
@@ -237,25 +231,135 @@
         "order": 1
     },
     {
-        "id": "json_parser",
-        "type": "json",
-        "z": "8350cc1f7811e02f",
-        "g": "group_logging",
-        "name": "",
-        "property": "payload",
-        "action": "obj",
-        "pretty": false,
-        "x": 630,
-        "y": 120,
-        "wires": [
-            [
-                "switch_by_kind",
-                "transform_for_influx"
-            ]
-        ]
+        "id": "cfe737e1fdebf681",
+        "type": "ui-page",
+        "name": "Water Level 1",
+        "ui": "f9b499d34c1cba03",
+        "path": "/water1",
+        "icon": "water",
+        "layout": "grid",
+        "theme": "9dd7ed5c0bad9357",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 3,
+        "className": "",
+        "visible": true,
+        "disabled": false
     },
     {
-        "id": "switch_by_kind",
+        "id": "121ee8e7538ae057",
+        "type": "ui-group",
+        "name": "Damn Level",
+        "page": "cfe737e1fdebf681",
+        "width": "2",
+        "height": "3",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "f3f3c42e8cb75cb7",
+        "type": "ui-group",
+        "name": "Range Picker",
+        "page": "cfe737e1fdebf681",
+        "width": "34",
+        "height": "2",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "false",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "955b903a27f58750",
+        "type": "ui-group",
+        "name": "Water Level Temporal",
+        "page": "cfe737e1fdebf681",
+        "width": "10",
+        "height": "3",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "8bed4b15e20bbd72",
+        "type": "ui-page",
+        "name": "Flow Rate",
+        "ui": "f9b499d34c1cba03",
+        "path": "/flow",
+        "icon": "flow",
+        "layout": "grid",
+        "theme": "9dd7ed5c0bad9357",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 4,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "9a69b0ccd08c2320",
+        "type": "ui-group",
+        "name": "Flow Rate",
+        "page": "8bed4b15e20bbd72",
+        "width": "3",
+        "height": "3",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "aaed50a4d8d3a6a4",
         "type": "switch",
         "z": "8350cc1f7811e02f",
         "name": "Filter by Kind",
@@ -280,21 +384,21 @@
         "repair": false,
         "outputs": 3,
         "x": 650,
-        "y": 400,
+        "y": 480,
         "wires": [
             [
-                "distance_logic"
+                "988668c67692fb47"
             ],
             [
-                "flow_logic"
+                "f185d49d000574de"
             ],
             [
-                "debug_others"
+                "a64830e3b40453ce"
             ]
         ]
     },
     {
-        "id": "distance_logic",
+        "id": "988668c67692fb47",
         "type": "function",
         "z": "8350cc1f7811e02f",
         "name": "Check Distance < 10",
@@ -305,15 +409,15 @@
         "finalize": "",
         "libs": [],
         "x": 900,
-        "y": 360,
+        "y": 440,
         "wires": [
             [
-                "debug_distance_alert"
+                "3f951c7b06d10c1c"
             ]
         ]
     },
     {
-        "id": "flow_logic",
+        "id": "f185d49d000574de",
         "type": "function",
         "z": "8350cc1f7811e02f",
         "name": "Check Flow > 400",
@@ -324,15 +428,15 @@
         "finalize": "",
         "libs": [],
         "x": 890,
-        "y": 420,
+        "y": 500,
         "wires": [
             [
-                "debug_flow_alert"
+                "b23cf281b607e2aa"
             ]
         ]
     },
     {
-        "id": "debug_distance_alert",
+        "id": "3f951c7b06d10c1c",
         "type": "debug",
         "z": "8350cc1f7811e02f",
         "name": "Distance Alert",
@@ -345,11 +449,11 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1120,
-        "y": 360,
+        "y": 440,
         "wires": []
     },
     {
-        "id": "debug_flow_alert",
+        "id": "b23cf281b607e2aa",
         "type": "debug",
         "z": "8350cc1f7811e02f",
         "name": "Flow Alert",
@@ -362,11 +466,11 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1100,
-        "y": 420,
+        "y": 500,
         "wires": []
     },
     {
-        "id": "debug_others",
+        "id": "a64830e3b40453ce",
         "type": "debug",
         "z": "8350cc1f7811e02f",
         "name": "Other Sensors",
@@ -379,14 +483,32 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 880,
-        "y": 480,
+        "y": 560,
         "wires": []
     },
     {
-        "id": "mqtt_in_node",
+        "id": "894106aba3e21409",
+        "type": "json",
+        "z": "8350cc1f7811e02f",
+        "g": "61b3cab9e50b62c7",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 630,
+        "y": 200,
+        "wires": [
+            [
+                "aaed50a4d8d3a6a4",
+                "425cf587a373a3e2"
+            ]
+        ]
+    },
+    {
+        "id": "d7d620bbd29a5d20",
         "type": "mqtt in",
         "z": "8350cc1f7811e02f",
-        "g": "group_logging",
+        "g": "61b3cab9e50b62c7",
         "name": "sensors/#",
         "topic": "sensors/#",
         "qos": "2",
@@ -397,20 +519,20 @@
         "rh": 0,
         "inputs": 0,
         "x": 460,
-        "y": 120,
+        "y": 200,
         "wires": [
             [
-                "json_parser"
+                "894106aba3e21409"
             ]
         ]
     },
     {
-        "id": "transform_for_influx",
+        "id": "425cf587a373a3e2",
         "type": "function",
         "z": "8350cc1f7811e02f",
-        "g": "group_logging",
+        "g": "61b3cab9e50b62c7",
         "name": "Format for InfluxDB",
-        "func": "function ToLocalDate(inDate) {\n    // Convert Unix timestamp (seconds) to JS Date object\n    return new Date(inDate * 1000);\n}\n\n// 1. Set the Measurement Name (e.g., \"distance\")\nmsg.measurement = msg.payload.kind;\n\n// 2. Define Payload [Fields, Tags]\nmsg.payload = [\n    {\n        // FIELDS: This is the ONLY data column being saved now.\n        // We removed 'timestamp' from here.\n        value: msg.payload.data\n    },\n    {\n        // TAGS: Metadata for filtering\n        sensor_id: msg.payload.id,\n        units: msg.payload.units\n    }\n];\n\n// 3. Override the \"Now\" time\n// This tells InfluxDB: \"Don't use the current time, use this specific time instead.\"\nmsg.timestamp = ToLocalDate(msg.payload.time_stamp);\n\nreturn msg;",
+        "func": "// CONFIGURATION: Adjust these to match your tank\nconst distBottom = 1000.0; // Distance when empty (0%)\nconst distFull = 10.0;     // Distance when full (100%)\n\nfunction ToLocalDate(inDate) {\n    return new Date(inDate * 1000);\n}\n\n// 1. Initialize Fields Object with the standard 'value'\nlet fields = {\n    value: msg.payload.data\n};\n\n// 2. Conditional Logic: Calculate Percentage ONLY for Distance/cm\nif (msg.payload.kind === \"distance\" && msg.payload.units === \"cm\") {\n    let currentDistance = msg.payload.data;\n\n    if (currentDistance !== undefined && currentDistance !== null) {\n        let percentage = ((distBottom - currentDistance) / (distBottom - distFull)) * 100;\n\n        // Clamp between 0 and 100\n        percentage = Math.max(0, Math.min(100, percentage));\n\n        // Add percentage to the fields object\n        fields.percentage = parseFloat(percentage.toFixed(1));\n    }\n}\n\n// 3. Set the Measurement Name\nmsg.measurement = msg.payload.kind;\n\n// 4. Define Payload [Fields, Tags]\nmsg.payload = [\n    fields,\n    {\n        // TAGS: Metadata for filtering\n        sensor_id: msg.payload.id,\n        units: msg.payload.units\n    }\n];\n\n// 5. Override the \"Now\" time\nmsg.timestamp = ToLocalDate(msg.payload.time_stamp);\n\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -418,19 +540,19 @@
         "finalize": "",
         "libs": [],
         "x": 930,
-        "y": 180,
+        "y": 260,
         "wires": [
             [
-                "influxdb_node",
-                "influxdb_stub"
+                "cc62b281b9e13b32",
+                "42a30455316dd6a2"
             ]
         ]
     },
     {
-        "id": "influxdb_node",
+        "id": "cc62b281b9e13b32",
         "type": "influxdb out",
         "z": "8350cc1f7811e02f",
-        "g": "group_logging",
+        "g": "61b3cab9e50b62c7",
         "influxdb": "influxdb_config_local",
         "name": "Save to DB",
         "measurement": "",
@@ -442,14 +564,14 @@
         "org": "SCI",
         "bucket": "iot_data",
         "x": 1220,
-        "y": 180,
+        "y": 260,
         "wires": []
     },
     {
-        "id": "influxdb_stub",
+        "id": "42a30455316dd6a2",
         "type": "debug",
         "z": "8350cc1f7811e02f",
-        "g": "group_logging",
+        "g": "61b3cab9e50b62c7",
         "name": "To InfluxDB (Debugger)",
         "active": false,
         "tosidebar": true,
@@ -460,7 +582,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 1210,
-        "y": 100,
+        "y": 180,
         "wires": []
     },
     {
@@ -686,5 +808,673 @@
         "x": 660,
         "y": 520,
         "wires": []
+    },
+    {
+        "id": "fdf45640cd1878a2",
+        "type": "function",
+        "z": "122b6eb0d33a29f5",
+        "name": "Format Timestamps for Flux",
+        "func": "// Helper: Parse Preset to Milliseconds\nfunction presetToMs(preset) {\n  if (!preset) return 0;\n  const unit = preset.slice(-1);\n  const val = parseInt(preset.slice(0, -1));\n  if (unit === 'm') return val * 60000;\n  if (unit === 'h') return val * 3600000;\n  if (unit === 'd') return val * 86400000;\n  return 0;\n}\n\n// 1. Handle Payload Structure\nlet formData = msg.payload || {};\n// If the payload is wrapped (from Loop Manager), unwrap it\nif (msg.payload.payload) formData = msg.payload.payload;\n\nlet startTime, endTime;\nlet presetValue = formData.Preset;\nlet frequencyValue = formData.Frequency;\n\n// 2. Determine Time Range (Start/Stop)\nif (presetValue && presetValue !== \"\") {\n  // PRESET MODE: Calculate start based on \"now\"\n  let msDuration = presetToMs(presetValue);\n  let now = Date.now();\n  endTime = now;\n  startTime = now - msDuration;\n} else {\n  // CUSTOM MODE: Use explicit Start/End times\n  startTime = new Date(formData.Start).getTime();\n  endTime = new Date(formData.End).getTime();\n\n  // Safety check\n  if (isNaN(startTime) || isNaN(endTime)) {\n    // Only error if we actually expected a custom range\n    if (!presetValue) return null;\n  }\n}\n\n// 3. Determine Aggregation Window (Frequency)\n// Use 'Frequency' from the dropdown for the window (e.g., \"5s\", \"1m\")\nlet windowPeriod = frequencyValue;\n\n// Safety: If frequency is missing or \"stop\" (manual update), default to 5s or 1m\nif (!windowPeriod || windowPeriod === \"stop\") {\n  windowPeriod = \"5s\";\n}\n\n// 4. Build Flux Query\nlet startISO = new Date(startTime).toISOString();\nlet endISO = new Date(endTime).toISOString();\n\nmsg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: ${startISO}, stop: ${endISO})\n  |> filter(fn: (r) => r[\"_measurement\"] == \"distance\")\n  |> filter(fn: (r) => r[\"_field\"] == \"percentage\")\n  |> aggregateWindow(every: ${windowPeriod}, fn: mean, createEmpty: false)\n  |> yield(name: \"mean\")\n`;\n\nmsg.payload = msg.query;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 440,
+        "wires": [
+            [
+                "1e97dad45b1066c2"
+            ]
+        ]
+    },
+    {
+        "id": "1e97dad45b1066c2",
+        "type": "influxdb in",
+        "z": "122b6eb0d33a29f5",
+        "influxdb": "influxdb_config_local",
+        "name": "Flux: Mean Temp/Humid",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1050,
+        "y": 440,
+        "wires": [
+            [
+                "cbcec2b825dabb8d"
+            ]
+        ]
+    },
+    {
+        "id": "e2a141fbeb622391",
+        "type": "function",
+        "z": "122b6eb0d33a29f5",
+        "name": "Loop Manager",
+        "func": "// Helper to parse \"5s\", \"1m\" to milliseconds\nfunction getMs(str) {\n    if (!str) return 5000;\n    let unit = str.slice(-1);\n    let val = parseInt(str.slice(0, -1));\n    if (unit === 's') return val * 1000;\n    if (unit === 'm') return val * 60000;\n    if (unit === 'h') return val * 3600000;\n    if (unit === 'd') return val * 86400000;\n    return 5000;\n}\n\n// --- 1. Save Configuration ---\n// Check if this message comes from the Form (has a Preset)\nif (msg.payload && msg.payload.Preset !== undefined) {\n    // Save the CONTENT of the payload (the form data)\n    context.set('lastConfig', msg.payload);\n}\n\n// --- 2. Handle STOP Command ---\nif (msg.payload && msg.payload.Frequency === \"stop\") {\n    context.set('interval', null);\n\n    // If this stop command came with form data, run it once.\n    let output2 = (msg.payload.Preset !== undefined) ? msg : null;\n\n    return [{ reset: true }, output2, null];\n}\n\n// --- 3. Handle New Frequency (Start/Update Loop) ---\nif (msg.payload && msg.payload.Frequency) {\n    let interval = getMs(msg.payload.Frequency);\n    context.set('interval', interval);\n\n    // Output 1: Reset Delay\n    // Output 2: Fire Query Immediately (Pass the full 'msg')\n    // Output 3: Start Loop\n    return [\n        { reset: true },\n        msg,\n        { payload: \"loop\", delay: interval }\n    ];\n}\n\n// --- 4. Handle The Loop Trigger ---\nif (msg.payload === \"loop\") {\n    let interval = context.get('interval');\n\n    // If stopped, do nothing\n    if (!interval) return null;\n\n    // Retrieve the saved form data\n    let lastConfig = context.get('lastConfig');\n\n    // Safety: If no config saved, stop.\n    if (!lastConfig) return null;\n\n    // *** FIX IS HERE ***\n    // We must wrap the config back into a 'payload' property\n    let newMsg = { payload: lastConfig };\n\n    return [\n        null,\n        newMsg,\n        { payload: \"loop\", delay: interval }\n    ];\n}",
+        "outputs": 3,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 540,
+        "wires": [
+            [
+                "9e3ddf3a0bbf8a23"
+            ],
+            [
+                "9878289e3a644f2b",
+                "fdf45640cd1878a2",
+                "8dbe2d0a5c821433"
+            ],
+            [
+                "9e3ddf3a0bbf8a23"
+            ]
+        ]
+    },
+    {
+        "id": "9e3ddf3a0bbf8a23",
+        "type": "delay",
+        "z": "122b6eb0d33a29f5",
+        "name": "Variable Timer",
+        "pauseType": "delayv",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 440,
+        "y": 640,
+        "wires": [
+            [
+                "e2a141fbeb622391"
+            ]
+        ]
+    },
+    {
+        "id": "b2ee9cc7fca6e2fa",
+        "type": "debug",
+        "z": "122b6eb0d33a29f5",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1560,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "8614b05b0b448e5e",
+        "type": "function",
+        "z": "122b6eb0d33a29f5",
+        "name": "Calculate %",
+        "func": "// CONFIGURATION\nconst distBottom = 1000; // 0% Level (cm/mm)\nconst distFull = 10;     // 100% Level (cm/mm)\nconst limit30s = 30 * 1000; // 30 seconds in ms\n\nlet distWater;\n\n// --- 1. Determine Distance (Single vs Average) ---\nif (Array.isArray(msg.payload)) {\n    if (msg.payload.length === 0) return null; // Protect against empty arrays\n\n    // *** FIX: Initialize qResult as an empty array first ***\n    msg.qResult = [];\n\n    // A. Find the latest timestamp in the dataset\n    let maxTime = 0;\n    for (let i = 0; i < msg.payload.length; i++) {\n        let t = new Date(msg.payload[i]._time).getTime();\n        if (t > maxTime) maxTime = t;\n    }\n\n    msg.maxTime = new Date(maxTime).toLocaleTimeString();\n    msg.maxTime = new Date(maxTime);\n    msg.qResult1 = msg.payload;\n    // B. Calculate Average only for records within 30s of maxTime\n    let sum = 0;\n    let count = 0;\n\n    for (let i = 0; i < msg.payload.length; i++) {\n        let recordTime = new Date(msg.payload[i]._time).getTime();\n        // Check if record is within the 30s window relative to the latest record\n        if ((maxTime - recordTime) <= limit30s) {\n            sum += msg.payload[i]._value;\n            count++;\n            msg.qResult.push(msg.payload[i]); // Now this works because qResult is []\n        }\n    }\n\n    if (count > 0) {\n        distWater = sum / count;\n    } else {\n        return null;\n    }\n\n} else {\n    // Not an array: Use _value directly (or payload if scalar)\n    msg.qResult = [msg.payload]; // Wrap in array for consistency\n    distWater = (msg.payload && msg.payload._value !== undefined) ? msg.payload._value : msg.payload;\n}\n\n// --- 2. Calculate Percentage ---\nif (distWater !== undefined && distWater !== null) {\n    let percentage = distWater;\n\n    // --- DEBUGGING ---\n    msg.debug = {\n        \"Raw Percentage\": percentage,\n    };\n\n    msg.payload = parseFloat(percentage.toFixed(1));\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1250,
+        "y": 840,
+        "wires": [
+            [
+                "3630cfa478a238f8",
+                "39ae979ac15f43d2",
+                "5ed2ea58bc9cfa75"
+            ]
+        ]
+    },
+    {
+        "id": "3630cfa478a238f8",
+        "type": "debug",
+        "z": "122b6eb0d33a29f5",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1420,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "9878289e3a644f2b",
+        "type": "function",
+        "z": "122b6eb0d33a29f5",
+        "name": "Query",
+        "func": "msg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: 0)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"distance\")\n  |> filter(fn: (r) => r[\"_field\"] == \"percentage\")\n  |> last()\n`;\n\n// Set msg.payload to the query, which the influxdb in node will execute.\nmsg.payload = msg.query;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 840,
+        "wires": [
+            [
+                "36ca1746997d55db"
+            ]
+        ]
+    },
+    {
+        "id": "36ca1746997d55db",
+        "type": "influxdb in",
+        "z": "122b6eb0d33a29f5",
+        "influxdb": "influxdb_config_local",
+        "name": "FluxDB",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1000,
+        "y": 840,
+        "wires": [
+            [
+                "8614b05b0b448e5e"
+            ]
+        ]
+    },
+    {
+        "id": "740b60c8d656415a",
+        "type": "inject",
+        "z": "122b6eb0d33a29f5",
+        "name": "Every 1s",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 460,
+        "y": 840,
+        "wires": [
+            [
+                "9878289e3a644f2b"
+            ]
+        ]
+    },
+    {
+        "id": "39ae979ac15f43d2",
+        "type": "ui-gauge",
+        "z": "122b6eb0d33a29f5",
+        "name": "Water Level Gauge",
+        "group": "121ee8e7538ae057",
+        "order": 1,
+        "value": "payload",
+        "valueType": "msg",
+        "width": "2",
+        "height": "7",
+        "gtype": "gauge-tank",
+        "title": "Water Level",
+        "alwaysShowTitle": false,
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#ff2600",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "11",
+                "color": "#ff9900",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "21",
+                "color": "#00f900",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "90",
+                "color": "#ff9900",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "95",
+                "color": "#ff2600",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": 100,
+        "sizeThickness": "",
+        "sizeGap": "",
+        "sizeKeyThickness": "",
+        "className": "",
+        "x": 1470,
+        "y": 940,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ed2ea58bc9cfa75",
+        "type": "ui-text",
+        "z": "122b6eb0d33a29f5",
+        "group": "121ee8e7538ae057",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "Last Updated",
+        "label": "Last Updated:",
+        "format": "{{msg.maxTime}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "wrapText": false,
+        "className": "",
+        "value": "maxTime",
+        "valueType": "msg",
+        "x": 1470,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "4241d00e506f2a88",
+        "type": "ui-form",
+        "z": "122b6eb0d33a29f5",
+        "name": "Windows Range Picker",
+        "group": "f3f3c42e8cb75cb7",
+        "label": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Time Preset",
+                "key": "Preset",
+                "type": "dropdown",
+                "required": true,
+                "rows": null
+            },
+            {
+                "label": "Update Frequency",
+                "key": "Frequency",
+                "type": "dropdown",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "Preset": "",
+            "Frequency": ""
+        },
+        "payload": "",
+        "submit": "Start",
+        "cancel": "Clear",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "Preset",
+                "value": "5m",
+                "label": "Last 5 Minute"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "30m",
+                "label": "Last 30 Minutes"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "1h",
+                "label": "Last 1 Hour"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "24h",
+                "label": "Last 24 Hours"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "stop",
+                "label": "Stop (Manual Only)"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "1s",
+                "label": "1 Second"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "5s",
+                "label": "5 Seconds"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "10s",
+                "label": "10 Seconds"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "30s",
+                "label": "30 Seconds"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "1m",
+                "label": "1 Minute"
+            },
+            {
+                "dropdown": "Frequency",
+                "value": "1h",
+                "label": "1 Hour"
+            }
+        ],
+        "x": 350,
+        "y": 340,
+        "wires": [
+            [
+                "e2a141fbeb622391"
+            ]
+        ]
+    },
+    {
+        "id": "8b7b7a74a4a12c91",
+        "type": "ui-button",
+        "z": "122b6eb0d33a29f5",
+        "group": "f3f3c42e8cb75cb7",
+        "name": "Stop Button",
+        "label": "STOP",
+        "order": 2,
+        "width": "1",
+        "height": 1,
+        "emulateClick": false,
+        "tooltip": "Stop Auto-Refresh",
+        "color": "white",
+        "bgcolor": "red",
+        "className": "",
+        "icon": "fa-stop",
+        "iconPosition": "left",
+        "payload": "{\"Frequency\": \"stop\"}",
+        "payloadType": "json",
+        "topic": "topic",
+        "topicType": "msg",
+        "buttonColor": "",
+        "textColor": "",
+        "iconColor": "",
+        "enableClick": true,
+        "enablePointerdown": false,
+        "pointerdownPayload": "",
+        "pointerdownPayloadType": "str",
+        "enablePointerup": false,
+        "pointerupPayload": "",
+        "pointerupPayloadType": "str",
+        "x": 70,
+        "y": 400,
+        "wires": [
+            [
+                "e2a141fbeb622391"
+            ]
+        ]
+    },
+    {
+        "id": "cbcec2b825dabb8d",
+        "type": "function",
+        "z": "122b6eb0d33a29f5",
+        "name": "Format to Chart",
+        "func": "const sensorNames = {\n    \"3ade6e09-3365-45a2-abca-1a01611ab078\": \"Tank Main Sensor\",\n    \"99999999-aaaa-bbbb-cccc-dddddddddddd\": \"Tank Backup Sensor\"\n};\n\nif (!Array.isArray(msg.payload)) return null;\n\n\nnode.send({ payload: [], reset: true });\n\nmsg.payload.forEach(p => {\n    node.send({\n        topic: sensorNames[p.sensor_id] || p.sensor_id,\n        payload: {\n            x: new Date(p._time).getTime(),\n            y: Number(p._value)\n        }\n    });\n});\n\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1300,
+        "y": 340,
+        "wires": [
+            [
+                "0d9f3f5176b91389",
+                "b2ee9cc7fca6e2fa"
+            ]
+        ]
+    },
+    {
+        "id": "0d9f3f5176b91389",
+        "type": "ui-chart",
+        "z": "122b6eb0d33a29f5",
+        "group": "955b903a27f58750",
+        "name": "Water Level",
+        "label": "Water Level",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "payload.x",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "HH:mm:ss",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "Level",
+        "yAxisProperty": "payload.y",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "100",
+        "bins": "",
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": "10",
+        "height": "8",
+        "className": "",
+        "interpolation": "linear",
+        "x": 1590,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8dbe2d0a5c821433",
+        "type": "function",
+        "z": "122b6eb0d33a29f5",
+        "name": "Query for FlowRate ",
+        "func": "msg.query = `\nfrom(bucket: \"iot_data\")\n  |> range(start: 0)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"flow_rate\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> last()\n`;\n\n// Set msg.payload to the query, which the influxdb in node will execute.\nmsg.payload = msg.query;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 140,
+        "wires": [
+            [
+                "b3ca2013997bec19"
+            ]
+        ]
+    },
+    {
+        "id": "2fd5f9d98f8cb2cd",
+        "type": "function",
+        "z": "122b6eb0d33a29f5",
+        "name": "Calculate Flow Rate",
+        "func": "// CONFIGURATION\nconst limit30s = 30 * 1000; // 30 seconds window for averaging\n\nlet avgFlowRaw; // Average Flow in raw units\nlet currentUnit = \"\"; // To store the unit found in the payload\n\n// --- 1. Determine Average Flow (Raw) for recent data ---\nif (Array.isArray(msg.payload)) {\n    if (msg.payload.length === 0) return null;\n\n    msg.qResult = [];\n\n    // A. Find the latest timestamp\n    let maxTime = 0;\n    for (let i = 0; i < msg.payload.length; i++) {\n        let t = new Date(msg.payload[i]._time).getTime();\n        if (t > maxTime) maxTime = t;\n    }\n\n    msg.maxTime = new Date(maxTime);\n\n    // B. Calculate Average only for records within 30s of maxTime\n    let sum = 0;\n    let count = 0;\n\n    for (let i = 0; i < msg.payload.length; i++) {\n        let recordTime = new Date(msg.payload[i]._time).getTime();\n\n        if ((maxTime - recordTime) <= limit30s) {\n            sum += msg.payload[i]._value;\n            count++;\n            msg.qResult.push(msg.payload[i]);\n        }\n    }\n\n    if (count > 0) {\n        avgFlowRaw = sum / count;\n        // Grab the unit from the first record used in the average\n        currentUnit = msg.qResult[0].units;\n    } else {\n        return null;\n    }\n\n} else {\n    // Single value case\n    msg.qResult = [msg.payload];\n    avgFlowRaw = (msg.payload && msg.payload._value !== undefined) ? msg.payload._value : msg.payload;\n    // Check if units exist on the payload object, otherwise default empty\n    currentUnit = (msg.payload && msg.payload.units) ? msg.payload.units : \"\";\n    msg.maxTime = new Date().toLocaleTimeString();\n}\n\n// --- 2. Convert to m³/s if necessary ---\nif (avgFlowRaw !== undefined && avgFlowRaw !== null) {\n\n    let flow_m3s = avgFlowRaw;\n\n    // Check unit and convert if it is L/hour\n    // Using toLowerCase() to be safe against \"L/Hour\", \"l/hour\", etc.\n    if (currentUnit && currentUnit.toLowerCase() === \"l/hour\") {\n        // Conversion: 1 L/h = 1 / 3,600,000 m³/s\n        flow_m3s = avgFlowRaw / 3600000;\n    }\n\n    // --- DEBUGGING ---\n    msg.debug = {\n        \"Raw Average\": avgFlowRaw,\n        \"Detected Unit\": currentUnit,\n        \"Final Flow (m3/s)\": flow_m3s\n    };\n\n    msg.payload = Number(flow_m3s);\n\n    \n\n    return msg;\n}",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 100,
+        "wires": [
+            [
+                "a116ea9b44a0df79",
+                "cc36ed558a56d4a2"
+            ]
+        ]
+    },
+    {
+        "id": "b3ca2013997bec19",
+        "type": "influxdb in",
+        "z": "122b6eb0d33a29f5",
+        "influxdb": "influxdb_config_local",
+        "name": "FluxDB",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 900,
+        "y": 100,
+        "wires": [
+            [
+                "2fd5f9d98f8cb2cd"
+            ]
+        ]
+    },
+    {
+        "id": "a116ea9b44a0df79",
+        "type": "ui-text",
+        "z": "122b6eb0d33a29f5",
+        "group": "9a69b0ccd08c2320",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "Last Updated Flow Rate Gauge",
+        "label": "Last Updated:",
+        "format": "{{msg.maxTime}}",
+        "layout": "row-left",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "wrapText": false,
+        "className": "",
+        "value": "maxTime",
+        "valueType": "msg",
+        "x": 1480,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "cc36ed558a56d4a2",
+        "type": "ui-gauge",
+        "z": "122b6eb0d33a29f5",
+        "name": "Flow Rate Gauge ",
+        "group": "9a69b0ccd08c2320",
+        "order": 1,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Flow Rate Gauge",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "m3/s",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#000000",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "1",
+                "color": "#96d35f",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "8",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "9",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": 10,
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 1470,
+        "y": 160,
+        "wires": [
+            []
+        ]
     }
 ]
