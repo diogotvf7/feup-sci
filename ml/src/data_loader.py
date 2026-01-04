@@ -8,10 +8,10 @@ from influxdb_client import InfluxDBClient
 class DataLoader:
     def __init__(self):
         # InfluxDB Config
-        self.url = os.environ.get("INFLUXDB_URL", "http://localhost:8086")
+        self.url = os.environ.get("INFLUXDB_URL", "http://influxdb:8086")
 
         # obviously shouldn't be here, but idc
-        self.token = os.environ.get("INFLUXDB_TOKEN_IOT_DATA_READ", "AefZaztP0AXP2gALPUW4eHGhOhiSGqe")
+        self.token = os.environ.get("INFLUXDB_TOKEN_IOT_DATA_READ", "G0G2nQRnO3O8dlB_TWvK-vAix1Z5ss-N64V5tT0IweD03cREVmKgvPpWt4MRaxSr0GCUHzvnt4IlGJKRW_x1cw==")
 
         self.org = os.environ.get("INFLUXDB_ORG", "SCI")
         # NOTE: Sensors are in 'iot_data' 

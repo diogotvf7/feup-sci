@@ -6,10 +6,10 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 class InfluxDBWriter:
     def __init__(self):
         # Configuration matches docker-compose.yml
-        self.url = os.environ.get("INFLUXDB_URL", "http://localhost:8086")
+        self.url = os.environ.get("INFLUXDB_URL", "http://influxdb:8086")
 
         # idc about the token
-        self.token = os.environ.get("INFLUXDB_TOKEN", "JLV2l-ePCBSDq45BCpZx02_vtupJPmSnJ1lnQ5LoJzFJSIxit30n0AMz_wNvaBzQcOyR4JBej3KJ4CLprh5sPw==")
+        self.token = os.environ.get("INFLUXDB_TOKEN", "G0G2nQRnO3O8dlB_TWvK-vAix1Z5ss-N64V5tT0IweD03cREVmKgvPpWt4MRaxSr0GCUHzvnt4IlGJKRW_x1cw==")
         self.org = os.environ.get("INFLUXDB_ORG", "SCI") 
         self.bucket = os.environ.get("INFLUXDB_BUCKET", "ml-predictions")
         
