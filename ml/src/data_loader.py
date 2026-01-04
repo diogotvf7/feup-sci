@@ -25,16 +25,6 @@ class DataLoader:
         self.lat = 41.6513969
         self.lon = -8.2336394
 
-        # Dam Dimensions (Approximation)
-        # Assuming Distance Sensor 0cm = Overflow (Full), 100cm = Empty.
-        # Volume% = (MaxHeight - CurrentDistance) / MaxHeight * 100
-        self.max_height_cm = 50.0 # Example default
-        self.empty_distance_cm = 50.0 
-        self.full_distance_cm = 10.0 # Sensor is 10cm above water when full?
-        # Let's use simple logic: Volume% = 100 - (CurrentDistance / MaxDistance * 100) ?
-        # Let's stick to simple formula structure:
-        # Vol% = (Dist_Empty - Dist_Current) / (Dist_Empty - Dist_Full) * 100
-        
         self.client = InfluxDBClient(url=self.url, token=self.token, org=self.org)
         self.query_api = self.client.query_api()
 
@@ -65,19 +55,11 @@ class DataLoader:
         """
         Fetches 'distance' from InfluxDB and converts to Volume %.
         """
-        dist = self._get_sensor_value("distance")
-        if dist is None:
+        vol_pct = self._get_sensor_value("distance", field="percentage")
+        if vol_pct is None:
             print("[WARNING] No distance data found. Using default 50%.")
             return 50.0 # Safety fallback
-        
-        # Conversion Logic
-        # If dist=10 (Full), Vol=100. If dist=50 (Empty), Vol=0.
-        # Range = 40.
-        # Vol = (50 - dist) / 40 * 100
-        # Clamped between 0 and 100
-        
-        vol_pct = (self.empty_distance_cm - float(dist)) / (self.empty_distance_cm - self.full_distance_cm) * 100.0
-        return max(0.0, min(100.0, vol_pct))
+        return vol_pct
 
     def get_weather_live(self):
         """
