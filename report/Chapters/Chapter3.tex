@@ -43,13 +43,13 @@ InfluxDB was selected as the primary data store due to its native optimization f
 \subsection{Implementation Details}
 The development of the prototype was executed through a hardware-software integration process, prioritizing modularity and real-time responsiveness. The implementation details are categorized as follows:
 
-\textbf{Hardware Setup and Data Acquisition}
+\subsubsection{Hardware Setup and Data Acquisition}
 The physical layer utilizes an Arduino Nano ESP32 units for local data acquisition. These controllers interface with a diverse sensor suite, including water flow sensors for monitoring inflow and outflow rates, rain gauges (pluviometers) for rainfall intensity, and pressure sensors that determine water levels via hydrostatic pressure. Additionally, power monitoring sensors track turbine voltage and current to calculate energy output. For the prototype, sensor data is simulated and scaled to mirror real-world hydrological conditions.
 
-\textbf{Communication Infrastructure}
+\subsubsection{Communication Infrastructure}
 Data transmission is built on a decoupled ``Atomic Messaging'' philosophy. Each sensor measurement (e.g., temperature, distance, flow) is sent as an independent MQTT message to its own specific topic (e.g., \texttt{sensors/temperature/ws\_01}). While the final deployment is designed to scale to LoRaWAN due to its high range, the current prototype utilizes MQTT over Wi-Fi for efficient data transfer to the Raspberry Pi gateway.
 
-\textbf{Middleware and Backend Logic}
+\subsubsection{Middleware and Backend Logic}
 The Raspberry Pi serves as the central processing hub, running a Dockerized stack consisting of RabbitMQ, InfluxDB, and Node-RED.
 \begin{itemize}
     \item \textbf{Message Broker:} RabbitMQ handles the routing of MQTT messages, ensuring reliable and secure delivery through TLS encryption.
@@ -57,19 +57,45 @@ The Raspberry Pi serves as the central processing hub, running a Dockerized stac
     \item \textbf{Flow Engine:} Node-RED is the primary logic coordinator, responsible for filtering sensor readings and transforming JSON payloads into database-ready formats.
 \end{itemize}
 
-\textbf{Predictive Analytics Implementation}
-To support proactive dam management, a Gradient Boosting Machine (GBM) model was developed in Python. The model was trained using historical hydrological data from the \textit{Sistema Nacional de Informação de Recursos Hídricos} (SNIRH)~\cite{snirh} and integrated with the OpenWeather API~\cite{openweather}. The system engineers features based on recent flow values and weather data to predict daily inflow/outflow trends.
+\subsubsection{Predictive Analytics and Machine Learning}
 
-\textbf{Human-Machine Interface (HMI)}
+To support proactive dam management, a machine learning model was developed to forecast reservoir water level evolution with a seven day horizon. The objective of this component is not full automation, but rather to provide predictive insights that support safer operational decisions within the Cyber-Physical System.
+
+\paragraph{Initial Model}
+As an initial approach, a Gradient Boosting Machine (GBM) model was developed in Python. The model was trained using historical hydrological data from the \textit{Sistema Nacional de Informação de Recursos Hídricos} (SNIRH)~\cite{snirh} and integrated with meteorological data obtained from the OpenWeather API~\cite{openweather}. The system engineers features based on recent flow values and weather data to predict daily inflow and outflow trends.
+
+\paragraph{Identified Limitations}
+During validation and stress testing, limitations were observed in the predictive behaviour of the initial model. Although the model performed adequately under typical operating conditions, its predictions were strongly influenced by seasonal patterns present in the historical dataset.
+
+The available data, spanning from 2023 to 2025, contained very few extreme drought events. As a result, the model showed limited sensitivity to prolonged high temperature and dry conditions, occasionally predicting stable or increasing water levels under simulated heatwave scenarios. This behaviour revealed a tendency toward seasonality overfitting, where calendar related correlations dominated over the physical drivers governing reservoir dynamics. In a safety critical context, this limitation reduces the reliability of drought risk anticipation.
+
+\paragraph{Physics-Informed Feature Engineering}
+To address this limitation, domain knowledge was explicitly incorporated into the learning process through feature engineering. A synthetic feature, referred to as the evaporation index, was introduced to represent environmental stress on the reservoir.
+
+This index combines temperature, wind speed and relative humidity into a single variable that reflects the potential for evaporation-driven water loss. By providing the model with a direct physical signal, it becomes less dependent on implicit correlations and more sensitive to environmentally driven water loss mechanisms.
+
+\paragraph{Synthetic Data Augmentation Strategy}
+In addition to feature engineering, a controlled synthetic data augmentation strategy was applied during training. Synthetic samples were generated to represent prolonged drought scenarios characterized by high temperature, negligible rainfall and increased wind intensity.
+
+For these synthetic observations, a gradual downward trend in water level was imposed, simulating daily water loss consistent with basic mass conservation principles. These synthetic samples were used exclusively during training and were combined with real historical data to form a hybrid dataset. This approach allows the model to learn physically plausible behaviour under extreme conditions that are absent from the original dataset, without replacing or distorting real observations.
+
+\paragraph{Delta-Based Forecasting Strategy}
+To further improve prediction stability and physical consistency, the forecasting formulation was revised. Instead of predicting absolute reservoir levels, the model was trained to predict daily variations, or deltas, in water level.
+
+The final multi-step forecast is reconstructed by cumulatively summing the predicted deltas starting from the current observed level. This strategy ensures that predictions remain grounded in the system's present state and reduces the risk of unrealistic level jumps over longer horizons. It also aligns naturally with physical reasoning, as reservoir evolution is governed by incremental inflow and outflow processes.
+
+Together, these improvements resulted in a physics-informed predictive model that demonstrates significantly improved behaviour under stress scenarios, while preserving accurate responses during normal operating conditions. This iterative refinement highlights the importance of embedding domain knowledge into data-driven models when operating under limited or unbalanced real-world datasets.
+
+\subsubsection{Human-Machine Interface (HMI)}
 The system provides a comprehensive dashboard built in Node-RED for real-time visualization of all monitored variables. This interface includes automated alerts for overflow or drought conditions and provides manual override buttons for solenoid valve control, ensuring a ``Human-in-the-Loop'' safety mechanism.
 
 \subsection{Implementation Constraints and Design Deviations}
 During the transition from the theoretical system design to the physical prototype, several constraints necessitated deviations from the original proposed solution. These changes highlight the challenges of hardware availability and the adaptation required for small-scale modeling.
 
-\textbf{Water Level Sensing: Pressure vs. Ultrasonic Distance}
+\subsubsection{Water Level Sensing: Pressure vs. Ultrasonic Distance}
 The initial design proposed a hydrostatic pressure transducer to measure water levels. However, for the current prototype implementation, an ultrasonic distance sensor was utilized as a primary alternative. While a pressure sensor measures the weight of the water column from the bottom, the ultrasonic sensor measures the distance from the top of the reservoir to the water surface. This shift required a modification in planing for the reservoir model. The ultrasonic sensor, is cost-effective and easier to implement in a small-scale setup but extremely complicated to apply to a real world scenario.
 
-\textbf{Flow Control: Manual vs. Automated Actuation}
+\subsubsection{Flow Control: Manual vs. Automated Actuation}
 The proposed architecture included a solenoid valve as an automated actuator to regulate water flow based on AI-driven commands from the Cognition layer. Due to hardware procurement limitations, the physical actuation is currently performed manually. To maintain the integrity of the Cyber-Physical loop, the system still generates "control recommendations" via the Node-RED dashboard. The operator acts as the physical link in the feedback loop, executing manual gate adjustments in response to the system’s predictive alerts for overflow or drought.
 
 \subsection{Benefits and Limitations}
