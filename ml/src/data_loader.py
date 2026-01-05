@@ -4,6 +4,8 @@ import requests
 import pandas as pd
 import numpy as np
 from influxdb_client import InfluxDBClient
+from pprint import pprint
+from get_data import fetch_day_summary
 
 class DataLoader:
     def __init__(self):
@@ -61,50 +63,94 @@ class DataLoader:
             return 50.0 # Safety fallback
         return vol_pct
 
-    def get_weather_live(self):
+    # def get_weather_live(self):
+    #     """
+    #     Fetches current weather from OpenWeatherMap One Call API.
+    #     """
+    #     if not self.weather_api_key:
+    #         print("[WARNING] No OpenWeather API Key. Using mock weather.")
+    #         return {
+    #             'temp': 15.0, 'humidity': 60, 'clouds': 50, 'wind_speed': 5.0
+    #         }
+
+    #     url = f"https://api.openweathermap.org/data/3.0/onecall?lat={self.lat}&lon={self.lon}&exclude=minutely,hourly,alerts&appid={self.weather_api_key}&date={datetime.date.today().isoformat()}"
+    #     try:
+    #         r = requests.get(url, timeout=5)
+    #         r.raise_for_status()
+    #         data = r.json()
+    #         current = data["current"]
+    #         print(f"[SYSTEM] Connected to Weather API")
+    #         return {
+    #             'temp': current.get('temp', 15.0),
+    #             'humidity': current.get('humidity', 60),
+    #             'clouds': current.get('clouds', 0),
+    #             'wind_speed': current.get('wind_speed', 0.0)
+    #         }
+    #     except Exception as e:
+    #         print(f"[ERROR] Weather API failed: {e}")
+    #         return {'temp': 15.0, 'humidity': 60, 'clouds': 50, 'wind_speed': 5.0}
+
+
+    def get_daily_weather_summary(self):
         """
-        Fetches current weather from OpenWeatherMap One Call API.
+        Fetches daily summary for today from OpenWeatherMap.
         """
         if not self.weather_api_key:
-            print("[WARNING] No OpenWeather API Key. Using mock weather.")
+            print("[WARNING] No OpenWeather API Key. Using mock daily summary.")
             return {
-                'temp': 15.0, 'humidity': 60, 'clouds': 50, 'wind_speed': 5.0
+                'temperature': {'max': 15.0, 'min': 10.0, 'afternoon': 15.0},
+                'precipitation': {'total': 0.0},
+                'humidity': {'afternoon': 60},
+                'cloud_cover': {'afternoon': 50},
+                'wind': {'max': {'speed': 5.0}}
             }
 
-        url = f"https://api.openweathermap.org/data/3.0/onecall?lat={self.lat}&lon={self.lon}&exclude=minutely,hourly,alerts&units=metric&appid={self.weather_api_key}"
         try:
-            r = requests.get(url, timeout=5)
-            r.raise_for_status()
-            data = r.json()
-            current = data.get('current', {})
-            return {
-                'temp': current.get('temp', 15.0),
-                'humidity': current.get('humidity', 60),
-                'clouds': current.get('clouds', 0),
-                'wind_speed': current.get('wind_speed', 0.0)
-            }
+            today = datetime.date.today()
+            data = fetch_day_summary(
+                target_date=today,
+                api_key=self.weather_api_key,
+                lat=self.lat,
+                lon=self.lon,
+            )
+            print(f"[SYSTEM] Connected to Weather API")
+            return data
         except Exception as e:
-            print(f"[ERROR] Weather API failed: {e}")
-            return {'temp': 15.0, 'humidity': 60, 'clouds': 50, 'wind_speed': 5.0}
+            print(f"[ERROR] Weather Daily Summary API failed: {e}")
+            return {
+                'temperature': {'max': 15.0, 'min': 10.0, 'afternoon': 15.0},
+                'precipitation': {'total': 0.0},
+                'humidity': {'afternoon': 60},
+                'cloud_cover': {'afternoon': 50},
+                'wind': {'max': {'speed': 5.0}}
+            }
 
     def get_real_time_state(self):
         """
         Aggregates all data into the format expected by the model.
         """
         vol_pct = self.get_current_dam_level()
-        weather = self.get_weather_live()
-        
+        # weather_live = self.get_weather_live() # Optional, if we still need live current temp
+        daily_summary = self.get_daily_weather_summary()
         now = datetime.datetime.now()
+        
+        # Safe access with defaults in case of missing keys
+        temps = daily_summary.get('temperature', {})
+        precip = daily_summary.get('precipitation', {})
+        humidity = daily_summary.get('humidity', {})
+        clouds = daily_summary.get('cloud_cover', {})
+        wind = daily_summary.get('wind', {})
+        wind_max = wind.get('max', {})
         
         current_data = {
             'water_volume_pct': vol_pct,
-            'precip_total_mm': 0.0, # TODO: Get from rain gauge or API daily summary?
-            'temp_max_C': weather['temp'], # Approx
-            'temp_min_C': weather['temp'], # Approx
-            'temp_afternoon_C': weather['temp'],
-            'humidity_afternoon': float(weather['humidity']),
-            'clouds_afternoon': float(weather['clouds']),
-            'wind_max_speed': float(weather['wind_speed']),
+            'precip_total_mm': precip.get('total', 0.0),
+            'temp_max_C': temps.get('max', 15.0),
+            'temp_min_C': temps.get('min', 15.0), 
+            'temp_afternoon_C': temps.get('afternoon', 15.0),
+            'humidity_afternoon': float(humidity.get('afternoon', 60)),
+            'clouds_afternoon': float(clouds.get('afternoon', 50)),
+            'wind_max_speed': float(wind_max.get('speed', 5.0)),
             'month': now.month,
             'dayofyear': now.timetuple().tm_yday
         }

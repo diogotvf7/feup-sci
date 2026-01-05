@@ -4,7 +4,6 @@ import json
 import os
 from pathlib import Path
 from typing import Any, Dict, Optional
-from dotenv import load_dotenv
 import requests
 
 coords = [41.6513969, -8.2336394]
@@ -39,21 +38,27 @@ def _save_cache(cache: Dict[str, Any]) -> None:
         json.dump(cache, handle, ensure_ascii=True, indent=2, sort_keys=True)
 
 
-def _fetch_day_summary(
+def fetch_day_summary(
     target_date: dt.date,
     api_key: str,
-    tz: Optional[str],
-    session: requests.Session,
+    lat: float,
+    lon: float,
+    tz: Optional[str] = None,
+    session: Optional[requests.Session] = None,
 ) -> Dict[str, Any]:
     params = {
-        "lat": coords[0],
-        "lon": coords[1],
+        "lat": lat,
+        "lon": lon,
         "date": target_date.isoformat(),
         "appid": api_key,
     }
     if tz:
         params["tz"] = tz
-    response = session.get(API_URL, params=params, timeout=30)
+
+    if session:
+        response = session.get(API_URL, params=params, timeout=30)
+    else:
+        response = requests.get(API_URL, params=params, timeout=30)
     response.raise_for_status()
     return response.json()
 
@@ -93,9 +98,11 @@ def update_day_summary(
 
     with requests.Session() as session:
         for target_date in pending_dates:
-            cache[target_date.isoformat()] = _fetch_day_summary(
+            cache[target_date.isoformat()] = fetch_day_summary(
                 target_date=target_date,
                 api_key=api_key,
+                lat=coords[0],
+                lon=coords[1],
                 tz=tz,
                 session=session,
             )
@@ -136,5 +143,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    from dotenv import load_dotenv
     load_dotenv()
     main()
