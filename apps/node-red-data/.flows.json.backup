@@ -26,7 +26,7 @@
     {
         "id": "f279411eb433cfda",
         "type": "tab",
-        "label": "Dynamo tables",
+        "label": "Dynamo Graphs",
         "disabled": false,
         "info": "",
         "env": []
@@ -34,7 +34,15 @@
     {
         "id": "a29502919b85aa46",
         "type": "tab",
-        "label": "Pluviometer table",
+        "label": "Pluviometer Graphs",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e8727e5e2e2a67dc",
+        "type": "tab",
+        "label": "Prevision_flows",
         "disabled": false,
         "info": "",
         "env": []
@@ -375,34 +383,6 @@
         "groupType": "default"
     },
     {
-        "id": "0692d2c876059e19",
-        "type": "ui-group",
-        "name": "Pluviometer",
-        "page": "b3c8a59b118a6f3d",
-        "width": 6,
-        "height": 1,
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
-        "id": "d66fdbd45eff537c",
-        "type": "ui-group",
-        "name": "Dynamo",
-        "page": "9d696326f1cc62b0",
-        "width": 6,
-        "height": 1,
-        "order": 1,
-        "showTitle": true,
-        "className": "",
-        "visible": "true",
-        "disabled": "false",
-        "groupType": "default"
-    },
-    {
         "id": "b3c8a59b118a6f3d",
         "type": "ui-page",
         "name": "Pluviometer",
@@ -473,6 +453,84 @@
         "className": "",
         "visible": "true",
         "disabled": "false"
+    },
+    {
+        "id": "0692d2c876059e19",
+        "type": "ui-group",
+        "name": "Pluviometer",
+        "page": "b3c8a59b118a6f3d",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "d66fdbd45eff537c",
+        "type": "ui-group",
+        "name": "Dynamo",
+        "page": "9d696326f1cc62b0",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "34bbf33091e46f06",
+        "type": "ui-page",
+        "name": "Previsions",
+        "ui": "f9b499d34c1cba03",
+        "path": "/page7",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "9dd7ed5c0bad9357",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 7,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "574d25a88f4f6fff",
+        "type": "ui-group",
+        "name": "prevision_1",
+        "page": "34bbf33091e46f06",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
     },
     {
         "id": "aaed50a4d8d3a6a4",
@@ -648,7 +706,7 @@
         "z": "8350cc1f7811e02f",
         "g": "61b3cab9e50b62c7",
         "name": "Format for InfluxDB",
-        "func": "// CONFIGURATION: Adjust these to match your tank\nconst distBottom = 1000.0; // Distance when empty (0%)\nconst distFull = 10.0;     // Distance when full (100%)\n\nfunction ToLocalDate(inDate) {\n    return new Date(inDate * 1000);\n}\n\n// 1. Initialize Fields Object with the standard 'value'\nlet fields = {\n    value: msg.payload.data\n};\n\n// 2. Conditional Logic: Calculate Percentage ONLY for Distance/cm\nif (msg.payload.kind === \"distance\" && msg.payload.units === \"cm\") {\n    let currentDistance = msg.payload.data;\n\n    if (currentDistance !== undefined && currentDistance !== null) {\n        let percentage = ((distBottom - currentDistance) / (distBottom - distFull)) * 100;\n\n        // Clamp between 0 and 100\n        percentage = Math.max(0, Math.min(100, percentage));\n\n        // Add percentage to the fields object\n        fields.percentage = parseFloat(percentage.toFixed(1));\n    }\n}\n\n// 3. Set the Measurement Name\nmsg.measurement = msg.payload.kind;\n\n// 4. Define Payload [Fields, Tags]\nmsg.payload = [\n    fields,\n    {\n        // TAGS: Metadata for filtering\n        sensor_id: msg.payload.id,\n        units: msg.payload.units\n    }\n];\n\n// 5. Override the \"Now\" time\nmsg.timestamp = ToLocalDate(msg.payload.time_stamp);\n\nreturn msg;",
+        "func": "// CONFIGURATION: Adjust these to match your tank\nconst distBottom = 10.14; // Distance when empty (0%)\nconst distFull = 3.25;     // Distance when full (100%)\n\nfunction ToLocalDate(inDate) {\n    return new Date(inDate * 1000);\n}\n\n// 1. Initialize Fields Object with the standard 'value'\nlet fields = {\n    value: msg.payload.data\n};\n\n// 2. Conditional Logic: Calculate Percentage ONLY for Distance/cm\nif (msg.payload.kind === \"distance\" && msg.payload.units === \"cm\") {\n    let currentDistance = msg.payload.data;\n\n    if (currentDistance == 0.0){\n        return null;\n    }\n\n    if (currentDistance !== undefined && currentDistance !== null) {\n        let percentage = ((distBottom - currentDistance) / (distBottom - distFull)) * 100;\n\n        // Clamp between 0 and 100\n        percentage = Math.max(0, Math.min(100, percentage));\n\n        // Add percentage to the fields object\n        fields.percentage = parseFloat(percentage.toFixed(1));\n    }\n}\n\n// 3. Set the Measurement Name\nmsg.measurement = msg.payload.kind;\n\n// 4. Define Payload [Fields, Tags]\nmsg.payload = [\n    fields,\n    {\n        // TAGS: Metadata for filtering\n        sensor_id: msg.payload.id,\n        units: msg.payload.units\n    }\n];\n\n// 5. Override the \"Now\" time\nmsg.timestamp = ToLocalDate(msg.payload.time_stamp);\n\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -1474,7 +1532,7 @@
         "type": "function",
         "z": "122b6eb0d33a29f5",
         "name": "Calculate Flow Rate",
-        "func": "// CONFIGURATION\nconst limit30s = 30 * 1000; // 30 seconds window for averaging\n\nlet avgFlowRaw; // Average Flow in raw units\nlet currentUnit = \"\"; // To store the unit found in the payload\n\n// --- 1. Determine Average Flow (Raw) for recent data ---\nif (Array.isArray(msg.payload)) {\n    if (msg.payload.length === 0) return null;\n\n    msg.qResult = [];\n\n    // A. Find the latest timestamp\n    let maxTime = 0;\n    for (let i = 0; i < msg.payload.length; i++) {\n        let t = new Date(msg.payload[i]._time).getTime();\n        if (t > maxTime) maxTime = t;\n    }\n\n    msg.maxTime = new Date(maxTime);\n\n    // B. Calculate Average only for records within 30s of maxTime\n    let sum = 0;\n    let count = 0;\n\n    for (let i = 0; i < msg.payload.length; i++) {\n        let recordTime = new Date(msg.payload[i]._time).getTime();\n\n        if ((maxTime - recordTime) <= limit30s) {\n            sum += msg.payload[i]._value;\n            count++;\n            msg.qResult.push(msg.payload[i]);\n        }\n    }\n\n    if (count > 0) {\n        avgFlowRaw = sum / count;\n        // Grab the unit from the first record used in the average\n        currentUnit = msg.qResult[0].units;\n    } else {\n        return null;\n    }\n\n} else {\n    // Single value case\n    msg.qResult = [msg.payload];\n    avgFlowRaw = (msg.payload && msg.payload._value !== undefined) ? msg.payload._value : msg.payload;\n    // Check if units exist on the payload object, otherwise default empty\n    currentUnit = (msg.payload && msg.payload.units) ? msg.payload.units : \"\";\n    msg.maxTime = new Date().toLocaleTimeString();\n}\n\n// --- 2. Convert to m³/s if necessary ---\nif (avgFlowRaw !== undefined && avgFlowRaw !== null) {\n\n    let flow_m3s = avgFlowRaw;\n\n    // Check unit and convert if it is L/hour\n    // Using toLowerCase() to be safe against \"L/Hour\", \"l/hour\", etc.\n    if (currentUnit && currentUnit.toLowerCase() === \"l/hour\") {\n        // Conversion: 1 L/h = 1 / 3,600,000 m³/s\n        flow_m3s = avgFlowRaw / 3600000;\n    }\n\n    // --- DEBUGGING ---\n    msg.debug = {\n        \"Raw Average\": avgFlowRaw,\n        \"Detected Unit\": currentUnit,\n        \"Final Flow (m3/s)\": flow_m3s\n    };\n\n    msg.payload = Number(flow_m3s);\n\n    \n\n    return msg;\n}",
+        "func": "// CONFIGURATION\nconst limit30s = 30 * 1000; // 30 seconds window for averaging\n\nlet avgFlowRaw; // Average Flow in raw units\nlet currentUnit = \"\"; // To store the unit found in the payload\n\n// --- 1. Determine Average Flow (Raw) for recent data ---\nif (Array.isArray(msg.payload)) {\n    if (msg.payload.length === 0) return null;\n\n    msg.qResult = [];\n\n    // A. Find the latest timestamp\n    let maxTime = 0;\n    for (let i = 0; i < msg.payload.length; i++) {\n        let t = new Date(msg.payload[i]._time).getTime();\n        if (t > maxTime) maxTime = t;\n    }\n\n    msg.maxTime = new Date(maxTime);\n\n    // B. Calculate Average only for records within 30s of maxTime\n    let sum = 0;\n    let count = 0;\n\n    for (let i = 0; i < msg.payload.length; i++) {\n        let recordTime = new Date(msg.payload[i]._time).getTime();\n\n        if ((maxTime - recordTime) <= limit30s) {\n            sum += msg.payload[i]._value;\n            count++;\n            msg.qResult.push(msg.payload[i]);\n        }\n    }\n\n    if (count > 0) {\n        avgFlowRaw = sum / count;\n        // Grab the unit from the first record used in the average\n        currentUnit = msg.qResult[0].units;\n    } else {\n        return null;\n    }\n\n} else {\n    // Single value case\n    msg.qResult = [msg.payload];\n    avgFlowRaw = (msg.payload && msg.payload._value !== undefined) ? msg.payload._value : msg.payload;\n    // Check if units exist on the payload object, otherwise default empty\n    currentUnit = (msg.payload && msg.payload.units) ? msg.payload.units : \"\";\n    msg.maxTime = new Date().toLocaleTimeString();\n}\n\n// --- 2. Convert to m³/s if necessary ---\nif (avgFlowRaw !== undefined && avgFlowRaw !== null) {\n\n    let flow_m3s = avgFlowRaw;\n\n    // Check unit and convert if it is L/hour\n    // Using toLowerCase() to be safe against \"L/Hour\", \"l/hour\", etc.\n    if (currentUnit && currentUnit.toLowerCase() === \"l/hour\") {\n        // Conversion: 1 L/h = 1 / 3,600,000 m³/s\n        flow_m3s = avgFlowRaw / 3600000;\n    }\n\n    // --- DEBUGGING ---\n    msg.debug = {\n        \"Raw Average\": avgFlowRaw,\n        \"Detected Unit\": currentUnit,\n        \"Final Flow (m3/s)\": flow_m3s\n    };\n\n    msg.payload = Number(avgFlowRaw);\n\n    \n\n    return msg;\n}",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -1549,7 +1607,7 @@
         "title": "Flow Rate Gauge",
         "alwaysShowTitle": false,
         "floatingTitlePosition": "top-left",
-        "units": "m3/s",
+        "units": "liters/h",
         "icon": "",
         "prefix": "",
         "suffix": "",
@@ -1561,26 +1619,26 @@
                 "textType": "label"
             },
             {
-                "from": "1",
+                "from": "10",
                 "color": "#96d35f",
                 "text": "",
                 "textType": "label"
             },
             {
-                "from": "8",
+                "from": "100",
                 "color": "#ffc800",
                 "text": "",
                 "textType": "label"
             },
             {
-                "from": "9",
+                "from": "140",
                 "color": "#ea5353",
                 "text": "",
                 "textType": "label"
             }
         ],
         "min": 0,
-        "max": 10,
+        "max": "152",
         "sizeThickness": 16,
         "sizeGap": 4,
         "sizeKeyThickness": 8,
@@ -3266,6 +3324,335 @@
         "y": 380,
         "wires": [
             []
+        ]
+    },
+    {
+        "id": "c7c273ef0650b0a7",
+        "type": "ui-chart",
+        "z": "e8727e5e2e2a67dc",
+        "group": "574d25a88f4f6fff",
+        "name": "Prevision_graph",
+        "label": "chart",
+        "order": 2,
+        "chartType": "bar",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "Time",
+        "xAxisProperty": "timestamp",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "category",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "mw_produced",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "100",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "line",
+        "pointRadius": "4",
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 1660,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "265b72089eb2d68e",
+        "type": "inject",
+        "z": "e8727e5e2e2a67dc",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 420,
+        "wires": [
+            [
+                "b9621ff2e2f14103"
+            ]
+        ]
+    },
+    {
+        "id": "b9621ff2e2f14103",
+        "type": "function",
+        "z": "e8727e5e2e2a67dc",
+        "name": "Prevision_live gate",
+        "func": "if (flow.get(\"prevision_live\")){\n  msg.query = `\n  from(bucket: \"ml-predictions\")\n    |> range(start: 0)\n    |> filter(fn: (r) => r[\"_measurement\"] == \"dam_predictions\")\n    |> filter(fn: (r) => r[\"_field\"] == \"day_1\" or r[\"_field\"] == \"day_7\" or r[\"_field\"] == \"day_6\" or r[\"_field\"] == \"day_5\" or r[\"_field\"] == \"day_4\" or r[\"_field\"] == \"day_3\" or r[\"_field\"] == \"day_2\")\n    |> last()\n  `;\n\n  msg.payload = msg.query;\n  return msg;\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 420,
+        "wires": [
+            [
+                "3c6cc19cc8d11445",
+                "08b3a066c146dfd9"
+            ]
+        ]
+    },
+    {
+        "id": "9af50ab074ca1c4e",
+        "type": "ui-form",
+        "z": "e8727e5e2e2a67dc",
+        "name": "Windows Range Picker prevision",
+        "group": "574d25a88f4f6fff",
+        "label": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "options": [
+            {
+                "label": "Time Preset",
+                "key": "Preset",
+                "type": "dropdown",
+                "required": true,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "Preset": ""
+        },
+        "payload": "",
+        "submit": "Submit Query",
+        "cancel": "Clear",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "Preset",
+                "value": "Live",
+                "label": "Live Update"
+            },
+            {
+                "dropdown": "Preset",
+                "value": "0",
+                "label": "Show week"
+            }
+        ],
+        "x": 140,
+        "y": 340,
+        "wires": [
+            [
+                "c31f2717e8d2e23f"
+            ]
+        ]
+    },
+    {
+        "id": "c31f2717e8d2e23f",
+        "type": "switch",
+        "z": "e8727e5e2e2a67dc",
+        "name": "",
+        "property": "payload[\"Preset\"]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Live",
+                "vt": "str"
+            },
+            {
+                "t": "neq",
+                "v": "Live",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 370,
+        "y": 320,
+        "wires": [
+            [
+                "ca76cc416f054735"
+            ],
+            [
+                "d511f51b5cec80b0"
+            ]
+        ]
+    },
+    {
+        "id": "ca76cc416f054735",
+        "type": "function",
+        "z": "e8727e5e2e2a67dc",
+        "name": "Live_switch_prevision",
+        "func": "flow.set(\"prevision_live\", true);\n//loads last 30min before starting the live update\nmsg.timePreset = \"30m\"\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 260,
+        "wires": [
+            [
+                "b53ca1f4dd313af8",
+                "08b3a066c146dfd9"
+            ]
+        ]
+    },
+    {
+        "id": "b53ca1f4dd313af8",
+        "type": "function",
+        "z": "e8727e5e2e2a67dc",
+        "name": "query_builder_prevision",
+        "func": "msg.query = `\nfrom(bucket: \"ml-predictions\")\n  |> range(start: 0)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"dam_predictions\")\n  |> filter(fn: (r) => r[\"_field\"] == \"day_1\" or r[\"_field\"] == \"day_7\" or r[\"_field\"] == \"day_6\" or r[\"_field\"] == \"day_5\" or r[\"_field\"] == \"day_4\" or r[\"_field\"] == \"day_3\" or r[\"_field\"] == \"day_2\")\n  |> last()\n`;\n\nmsg.payload = msg.query;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 340,
+        "wires": [
+            [
+                "3c6cc19cc8d11445"
+            ]
+        ]
+    },
+    {
+        "id": "3c6cc19cc8d11445",
+        "type": "influxdb in",
+        "z": "e8727e5e2e2a67dc",
+        "influxdb": "influxdb_config_local",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "SCI",
+        "x": 1100,
+        "y": 340,
+        "wires": [
+            [
+                "7a74713cb0bd8050"
+            ]
+        ]
+    },
+    {
+        "id": "7a74713cb0bd8050",
+        "type": "function",
+        "z": "e8727e5e2e2a67dc",
+        "name": "Table converter previsions",
+        "func": "let data = msg.payload;\n\n// Create array of messages to send\nlet messages = [];\n\n// First message clears the chart\nmessages.push({\n    topic: \"previsions\",\n    payload: []\n});\n\nlet weekday = new Date()\n\nlet days = new Array('Sunday', 'Monday', 'Tuesday',\n    'Wednesday', 'Thursday', 'Friday', 'Saturday');\n\n// Add each data point as a separate message\ndata.forEach(point => {\n    weekday.setDate(weekday.getDate()+ 1)\n    messages.push({\n        topic: \"prevision\",\n        payload: Number(point._value),\n        timestamp: days[weekday.getDay()]\n    });\n});\n\n// Send all messages\nmessages.forEach(m => node.send(m));\n\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1390,
+        "y": 340,
+        "wires": [
+            [
+                "c7c273ef0650b0a7",
+                "d49f22e2fdf8c2c3"
+            ]
+        ]
+    },
+    {
+        "id": "d49f22e2fdf8c2c3",
+        "type": "debug",
+        "z": "e8727e5e2e2a67dc",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1700,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "08b3a066c146dfd9",
+        "type": "debug",
+        "z": "e8727e5e2e2a67dc",
+        "name": "debug 4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "d511f51b5cec80b0",
+        "type": "function",
+        "z": "e8727e5e2e2a67dc",
+        "name": "function 1",
+        "func": "flow.set(\"prevision_live\", false);",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 340,
+        "wires": [
+            [
+                "b53ca1f4dd313af8"
+            ]
         ]
     }
 ]
