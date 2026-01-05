@@ -53,9 +53,18 @@ services:
       - INFLUXDB_ADMIN_PASSWORD=adminpassword
     networks:
       - node-red-net
+  ml-service:
+    build:
+      context: ../ml
+      dockerfile: Dockerfile
+    volumes:
+      - ../ml:/app
+    networks:
+      - node-red-net
 configs:
   rabbitmq-plugins:
     content: "[rabbitmq_management]."  
+
 
 networks:
   node-red-net:
