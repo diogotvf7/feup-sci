@@ -3608,7 +3608,7 @@
         "type": "debug",
         "z": "e8727e5e2e2a67dc",
         "name": "debug 6",
-        "active": true,
+        "active": false,
         "tosidebar": true,
         "console": false,
         "tostatus": false,
