@@ -14,8 +14,6 @@ The system is structured according to the 5-layer IoT architecture, ensuring a c
 \subsubsection{CPS 5C Architecture Mapping}
 The system is further analyzed through the lens of the 5C functional architecture for Cyber-Physical Systems, which facilitates a transition from raw physical data to autonomous configuration.
 
-
-
 \begin{enumerate}
     \item \textbf{Connection (Data Acquisition):} This initial layer focuses on the seamless acquisition of data from the physical asset. In our system, this involves the integration of pressure transducers, pluviometers, and power output meters, alongside solenoid valve actuators.
     \item \textbf{Conversion (Data Preprocessing):} Raw data is processed at the edge to become "smart" and structured. Our implementation utilizes Node-RED for data aggregation, where local pluviometer data is combined with external Weather API streams.
@@ -41,7 +39,14 @@ Every sensor payload follows a strict JSON "Data Contract" to maintain consisten
 InfluxDB was selected as the primary data store due to its native optimization for time-series streams. Unlike relational databases, it provides high-ingest performance for million-point streams and automated lifecycle management through Retention Policies (e.g., \texttt{KEEP 30 DAYS}), preventing storage exhaustion. Data ingestion is handled directly within Node-RED to allow for logic-first preprocessing, enabling the system to filter bad readings or outliers before they reach the database.
 
 \subsection{Implementation Details}
-The development of the prototype was executed through a hardware-software integration process, prioritizing modularity and real-time responsiveness. The implementation details are categorized as follows:
+The development of the prototype was executed through a hardware-software integration process, prioritizing modularity and real-time responsiveness. Figure~\ref{fig:our-arch} presents the general architecture of the proof-of-concept solution, including the data pipeline, from sensor information to ML predictions. The complete implementation details are categorized as follows.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{figures/our-architecture.pdf}
+    \caption{Architecture of the prototype implemented. In comparison to the original architecture proposed for the application, we include simulated sensors and there is no actuation pipeline.}
+    \label{fig:our-arch}
+\end{figure}
 
 \textbf{Hardware Setup and Data Acquisition}
 The physical layer utilizes an Arduino Nano ESP32 units for local data acquisition. These controllers interface with a diverse sensor suite, including water flow sensors for monitoring inflow and outflow rates, rain gauges (pluviometers) for rainfall intensity, and pressure sensors that determine water levels via hydrostatic pressure. Additionally, power monitoring sensors track turbine voltage and current to calculate energy output. For the prototype, sensor data is simulated and scaled to mirror real-world hydrological conditions.
