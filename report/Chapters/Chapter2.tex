@@ -1,4 +1,5 @@
-\section{Related Works}
+\section{Related Work}
+This section reviews the state-of-the-art in IoT and CPS applied to hydroelectric dams. We also specifically adress architecturees that leverage Machine Learning to enhance monitoring and control mechanisms.
 
 Sadanand et al.~\cite{ref1} present a system integrating \textbf{Internet of Things (IoT)} sensors and a \textbf{Machine Learning (ML)} model for automated control of dam gates. The system architecture is tripartite: (i) an IoT sensor network strategically deployed in water bodies and within the dam infrastructure; (ii) a predictive model founded on the \textbf{XGBoost} algorithm; and (iii) a physical actuation module for gate operation. Water level and velocity data are aggregated and processed by a central unit based on \textbf{Raspberry Pi}. The XGBoost model is calibrated to classify hydrological risk into three states (\emph{Alert}, \emph{Warning}, and \emph{Danger}), which subsequently and automatically triggers the progressive opening of the gates.
 
@@ -10,15 +11,17 @@ The ANN algorithm demonstrated an accuracy of 87\% in predicting meteorological 
 
 Siddula et al.~\cite{ref3} represent one of the initial attempts to apply IoT for real-time dam monitoring. The system utilizes water level sensors connected to microcontrollers and employs Wi-Fi-based wireless communication for data transmission to a central control panel and a mobile application. Upon a rapid increase in water level, the system issues alerts and facilitates the remote control of the gates.
 
-Although this solution offers a low-cost and easily maintainable implementation, its nature is predominantly \textbf{reactive}---it does not incorporate data-driven predictive models, relying solely on fixed thresholds for risk detection. Consequently, this approach does not permit the anticipation of flood events with sufficient lead time for the deployment of effective preventative measures.
+Although this solution offers a low-cost and easily maintainable implementation, its nature is predominantly \textbf{reactive}---it does not incorporate data-driven predictive models, relying solely on fixed thresholds for risk detection. Consequently, this approach does not anticipate flood events with sufficient lead time for the deployment of effective preventative measures.
 
 The article published in the journal \emph{Sensors}~\cite{ref4} introduces an advanced methodology for river flow forecasting, based on \textbf{Deep Neural Networks} of the \textbf{Multi-Layer Perceptron (MLP)} type. The study utilizes historical time series data encompassing flow rate, precipitation, and temperature as input for model training, which aims to predict the volume of water flow over short-term temporal horizons.
 
 The results demonstrate that the MLP model surpasses conventional algorithms, such as linear regression and \textbf{Support Vector Machines (SVM)}, in terms of predictive accuracy and stability. The principal contribution of this study lies in validating the applicability of \textbf{Deep Learning (DL)} to hydrological forecasting, suggesting that such models can serve as a valuable complement to existing IoT systems. Nevertheless, the investigation is confined to theoretical forecasting and does not address its direct integration with physical gate control systems.
 
-\section{Analysis and Conclusions}
 Table~\ref{tab:relatedworks} summarises the main characteristics, reported performance, and limitations of the reviewed systems.
-\begin{table}[h]
+
+\begin{table}
+\setlength{\arrayrulewidth}{0.5mm}
+\setlength{\tabcolsep}{5pt}
 \centering
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|p{3cm}|p{3.2cm}|p{3.2cm}|p{3.2cm}|p{3cm}|p{4cm}|}
@@ -35,6 +38,7 @@ Siddula et al.~(2018) & IoT + Wi-Fi Communication & None (fixed threshold logic)
 \hline
 \end{tabular}
 }
+\vspace{0.5mm}
 \caption{Comparison of related works.}
 \label{tab:relatedworks}
 \end{table}
@@ -51,4 +55,4 @@ Future research in this domain should, therefore, focus on the following directi
 \item Enhancing the resilience and cybersecurity of IoT systems applied to the management of critical infrastructure.
 \end{itemize}
 
-These forthcoming advancements will facilitate the construction of systems that are more intelligent, scalable, and reliable for disaster prevention and the optimisation of water resource management.
+These advancements will facilitate the construction of systems that are more intelligent, scalable, and reliable for disaster prevention and the optimisation of water resource management.
