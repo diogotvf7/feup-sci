@@ -72,7 +72,7 @@ As an initial approach, a Gradient Boosting Machine (GBM) model was developed in
 \paragraph{Identified Limitations}
 During validation and stress testing, limitations were observed in the predictive behaviour of the initial model. Although the model performed adequately under typical operating conditions, its predictions were strongly influenced by seasonal patterns present in the historical dataset.
 
-The available data, spanning from 2023 to 2025, contained very few extreme drought events. As a result, the model showed limited sensitivity to prolonged high temperature and dry conditions, occasionally predicting stable or increasing water levels under simulated heatwave scenarios. This behaviour revealed a tendency toward seasonality overfitting, where calendar related correlations dominated over the physical drivers governing reservoir dynamics. In a safety critical context, this limitation reduces the reliability of drought risk anticipation.
+The available data, spanning from 2023 to 2025, contained very few extreme drought events. As a result, the model showed limited sensitivity to prolonged high temperature and dry conditions, occasionally predicting stable or increasing water levels under simulated heatwave scenarios. This behaviour revealed a tendency towards seasonality overfitting, where calendar related correlations dominated over the physical drivers governing reservoir dynamics. In a safety critical context, this limitation reduces the reliability of drought risk anticipation.
 
 \paragraph{Physics-Informed Feature Engineering}
 To address this limitation, domain knowledge was explicitly incorporated into the learning process through feature engineering. A synthetic feature, referred to as the evaporation index, was introduced to represent environmental stress on the reservoir.
@@ -89,7 +89,7 @@ To further improve prediction stability and physical consistency, the forecastin
 
 The final multi-step forecast is reconstructed by cumulatively summing the predicted deltas starting from the current observed level. This strategy ensures that predictions remain grounded in the system's present state and reduces the risk of unrealistic level jumps over longer horizons. It also aligns naturally with physical reasoning, as reservoir evolution is governed by incremental inflow and outflow processes.
 
-Together, these improvements resulted in a physics-informed predictive model that demonstrates significantly improved behaviour under stress scenarios, while preserving accurate responses during normal operating conditions. This iterative refinement highlights the importance of embedding domain knowledge into data-driven models when operating under limited or unbalanced real-world datasets.
+Together, these improvements resulted in a physics-informed predictive model that demonstrates significantly improved behaviour under stress scenarios, while preserving accurate responses during normal operating conditions. This iterative refinement highlights the importance of embedding domain knowledge into data-driven models when operating under limited or imbalanced real-world datasets.
 
 \subsubsection{Human-Machine Interface (HMI)}
 The system provides a comprehensive dashboard built in Node-RED for real-time visualization of all monitored variables. This interface includes automated alerts for overflow or drought conditions and provides manual override buttons for solenoid valve control, ensuring a ``Human-in-the-Loop'' safety mechanism.

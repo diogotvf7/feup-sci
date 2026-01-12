@@ -1,15 +1,12 @@
 \section{Discussion}
-\subsection{Benefits}
-% Summary of main benefits observed after implementation.
+This section presents a discussion of the benefits and limitations of the proposed solution, including the prototype and the ML predictive analytics.
 
-\subsection{Limitations}
-% Discussion of limitations or areas for improvement.
+\subsection{Prototype Discussion}
+Although the prototype successfully demonstrated the feasibility of a unified IoT monitoring stack, it also includes several limitations.
 
-remove later
-\subsection{Benefits and Limitations}
-We expect that the prototype successfully demonstrates the feasibility of a unified IoT monitoring stack, yet the implementation deviations provide valuable insights into system robustness. 
+A simplification of the prototype was the use of an ultrasonic sensor. It was a good alternative for small-scale testing on a controlled environment, though it remains sensitive to surface turbulence and even more susceptible to noise from particles in the air compared to hydrostatic methods. Furthermore, while the current manual control of the dam gate is a limitation of the physical prototype, it can validate other aspects of the solution, such as monitoring sensor information and the human interface for the operator. This ensures that even without direct electronic actuation, the decision support system provides actionable intelligence that enhances operational safety. Future iterations can focus on integrating solenoid actuators to achieve the full ``Self-Adaptation'' envisioned in the 5C CPS architecture.
 
-The use of an ultrasonic sensor can be a good alternative for small-scale testing on a controlled environment, though it remains sensitive to surface turbulence and even more susceptible to noise from particles in the air compared to hydrostatic methods. Furthermore, while the current manual control of the dam gate is a limitation of the physical prototype, it can validate other aspects of prototype such as the automated and manual decision control and configuration. This ensures that even without direct electronic actuation, the decision support system provides actionable intelligence that enhances operational safety. Future iterations can focus on re-integrating solenoid actuators to achieve the full "Self-Adaptation" envisioned in the 5C CPS architecture.
+In addition, while the predictive analytics module enhances decision support, it does not directly suggest actions to take. Consequently, the human operator needs to manually translate the insights into specific control actions.
 
 \subsection{Machine Learning Discussion}
 
@@ -17,24 +14,20 @@ This subsection discusses the main design decisions, benefits, and limitations o
 
 \subsubsection{Initial Approach and Identified Limitations}
 
-The initial machine learning approach aimed to capture historical water level behavior, with a particular focus on seasonal patterns. Although this baseline model achieved reasonable predictive performance on past data, it revealed important limitations. In particular, it showed a strong bias towards seasonality and limited sensitivity to rare but safety-critical situations, such as extreme low water level conditions associated with dry risk events, since these events were underrepresented in the training dataset.
+The initial machine learning approach aimed to capture historical water level behaviour, with a particular focus on seasonal patterns. Although this baseline model achieved reasonable predictive performance on past data, it revealed important limitations. In particular, it showed a strong bias towards seasonality and limited sensitivity to rare but safety-critical situations, such as extreme low water level conditions associated with dry risk events, since these events were underrepresented in the training dataset.
 
 \subsubsection{Safety-Oriented Design Decisions}
 
-Within the context of Cyber-Physical Systems and IoT, prediction errors may have direct physical consequences. In dam management scenarios, underestimating critical conditions can compromise operational safety and, in extreme cases, lead to catastrophic outcomes. For this reason, the machine learning component was deliberately redesigned following a safety-oriented approach, prioritizing robustness and conservative behavior rather than purely maximizing predictive accuracy.
+Within the context of Cyber-Physical Systems and IoT, prediction errors may have direct physical consequences. In dam management scenarios, underestimating critical conditions can compromise operational safety and, in extreme cases, lead to catastrophic outcomes. For this reason, the machine learning component was deliberately redesigned following a safety-oriented approach, prioritizing robustness and conservative behaviour rather than purely maximizing predictive accuracy.
 
-\subsubsection{Synthetic Data and Safety--Performance Trade-off}
+\subsubsection{Synthetic Data and Safety-Performance Trade-off}
 
-One of the main challenges identified was the limited availability of real-world data representing rare and low-frequency events. To address this issue, synthetic data generation techniques were used to enrich the training dataset with safety-critical scenarios. This strategy reduced the model’s dependence on dominant seasonal patterns and increased its sensitivity to dry risk conditions. As a result, the model adopted a more cautious predictive behavior, supporting safer decision-making within the CPS. As expected, this design choice introduced a trade-off between system safety and predictive performance. By explicitly modeling rare events during training, the system becomes better prepared to support operators in high-risk situations, even when historical data alone is insufficient to fully capture such conditions.
+One of the main challenges identified was the limited availability of real-world data representing rare and low-frequency events. To address this issue, synthetic data generation techniques were used to enrich the training dataset with safety-critical scenarios. This strategy reduced the model's dependence on dominant seasonal patterns and increased its sensitivity to dry risk conditions. As a result, the model adopted a more cautious predictive behaviour, supporting safer decision-making within the CPS. As expected, this design choice introduced a trade-off between system safety and predictive performance. By explicitly modeling rare events during training, the system becomes better prepared to support operators in high-risk situations, even when historical data alone is insufficient to fully capture such conditions.
 
 \subsubsection{Interpretation of Performance Degradation}
 
-A degradation in predictive performance was observed when evaluating the model using the available test dataset. This outcome was anticipated, since the test data originates from the same dam and therefore follows seasonal dynamics similar to those present in the original training data. By reducing its reliance on these seasonal correlations, the model sacrifices performance on familiar patterns in exchange for improved robustness under critical operating conditions. From a CPS perspective, this behavior is desirable, as it reduces the likelihood of overly optimistic predictions in scenarios characterized by uncertainty and environmental variability.
+A degradation in predictive performance was observed when evaluating the model using the available test dataset. This outcome was anticipated, since the test data originates from the same dam and therefore follows seasonal dynamics similar to those present in the original training data. By reducing its reliance on these seasonal correlations, the model sacrifices performance on familiar patterns in exchange for improved robustness under critical operating conditions. From a CPS perspective, this behaviour is desirable, as it reduces the likelihood of overly optimistic predictions in scenarios characterized by uncertainty and environmental variability.
 
 \subsubsection{Alignment with CPS and IoT Principles}
 
-The observed trade-offs reflect a conscious engineering decision aligned with core CPS and IoT principles emphasized throughout the course, where safety, reliability, and risk mitigation take precedence over maximum statistical performance. In safety-critical infrastructures, conservative predictions are often preferable to highly optimized models that may fail under rare but severe conditions.
-
-\subsubsection{Future Improvements}
-
-Future work may include the integration of data from multiple dams to improve model generalization, the combination of data-driven approaches with physics-informed constraints, and the exploration of adaptive or online learning techniques. These improvements could help achieve a better balance between safety and performance while further increasing the reliability of machine learning components in cyber-physical dam monitoring systems.
+The observed trade-offs reflect a conscious engineering decision aligned with core CPS and IoT principles, where safety, reliability, and risk mitigation take precedence over maximum statistical performance. In safety-critical infrastructures, conservative predictions are often preferable to highly optimized models that may fail under rare but severe conditions.

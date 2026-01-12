@@ -3,7 +3,8 @@
 % Future Work: Suggestions for future enhancements and research directions.
 % Avoid sub-sections here as per instructions.
 
-\subsection{Future Work}
+This work successfully developed and validated a CPS for hydroelectric dam monitoring. By integrating Arduino-based sensing with MQTT middleware, an InfluxDB database, and a Node-RED dashboard, we established a scalable architecture capable of real-time data acquistion and predictive analytics. We implemented a GBM predict model, which through synthetic data augmentation and physics-informed feature engineering, was able to overcome seasonality overfitting and better anticipate drought risks. Ultimately, the proof-of-concept prototype showed that low cost IoT components, combined with predictive analytics, can effectively support operational decision-making.
+
 Building upon the current prototype, several directions for future research and development have been identified to transition this system toward a real-world deployment:
 
 \begin{itemize}
@@ -12,3 +13,5 @@ Building upon the current prototype, several directions for future research and 
     \item \textbf{Comparative Level-Sensing Analysis:} We plan to conduct comparative experiments between ultrasonic distance sensors and hydrostatic pressure sensors. By evaluating the performance of each individually and testing a hybrid configuration (using both sensors simultaneously), we aim to determine which solution provides the highest reliability under varying conditions, such as surface turbulence or debris interference.
     \item \textbf{Real-Dam Adaptation:} The final stage of development involves scaling the communication infrastructure from Wi-Fi to LoRaWAN to meet the range requirements of a real dam site. This phase will also include adapting the software logic to handle the massive data throughput and environmental complexities inherent in large-scale hydroelectric operations.
 \end{itemize}
+
+For the ML predictive decisions, future improvements could include the integration of data from multiple dams to improve model generalization, the combination of data-driven approaches with physics-informed constraints, and the exploration of adaptive or online learning techniques. Furthermore, gathering data and engineering features from upstream dams would improve the consistency and performance of the models. These improvements could help achieve a better balance between safety and performance while further increasing the reliability of ML components in cyber-physical dam monitoring systems.
