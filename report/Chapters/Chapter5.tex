@@ -1,33 +1,91 @@
-\section{Discussion}
-This section presents a discussion of the benefits and limitations of the proposed solution, including the prototype and the ML predictive analytics.
+\section{Evaluation and Results}
+\subsection{Testing Methodology}
+Evaluation relies on the daily split spanning 1 January to 19 February 2024, with the learned XGBoost model trained on a broader historical window and the persistence baseline retaining each previous day’s reading. Predictions are contrasted against the measured volumes to compute MAE, RMSE, MAPE and $R^2$ per model, ensuring that the performance comparison isolates the effect of the modeling strategy rather than dataset selection. This test window is representative of both stable periods and short-lived spikes, so the diagnostics incorporate both global error summaries and diagnostic plots to verify calibration.
 
-\subsection{Prototype Discussion}
-Although the prototype successfully demonstrated the feasibility of a unified IoT monitoring stack, it also includes several limitations.
+\subsection{Quantitative Analysis}
+The XGBoost model delivers clear gains: MAE drops from 0.215 to 0.150 and RMSE falls from 0.238 to 0.182, representing relative reductions of roughly 30\% and 25\%. MAPE decreases to 1.484\% (from 2.143\%), and $R^2$ improves from 0.882 to 0.930, approaching the variance-explained ceiling. These values appear in Table~\ref{tab:metrics}.
 
-A simplification of the prototype was the use of an ultrasonic sensor. It was a good alternative for small-scale testing on a controlled environment, though it remains sensitive to surface turbulence and even more susceptible to noise from particles in the air compared to hydrostatic methods. Furthermore, while the current manual control of the dam gate is a limitation of the physical prototype, it can validate other aspects of the solution, such as monitoring sensor information and the human interface for the operator. This ensures that even without direct electronic actuation, the decision support system provides actionable intelligence that enhances operational safety. Future iterations can focus on integrating solenoid actuators to achieve the full ``Self-Adaptation'' envisioned in the 5C CPS architecture.
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|r|r|r|r|}
+\hline
+\textbf{Model} & \textbf{MAE} & \textbf{RMSE} & \textbf{MAPE (\%)} & $R^{2}$ \\
+\hline
+XGBoost & 0.150 & 0.182 & 1.484 & 0.930 \\
+\hline
+Persistence & 0.215 & 0.238 & 2.143 & 0.882 \\
+\hline
+\end{tabular}
+\caption{Aggregated metrics per model on the January–February 2024 test window.}
+\label{tab:metrics}
+\end{table}
 
-In addition, while the predictive analytics module enhances decision support, it does not directly suggest actions to take. Consequently, the human operator needs to manually translate the insights into specific control actions.
+The scatter plot in Figure~\ref{fig:pred_vs_actual} confirms that XGBoost predictions stay close to the diagonal, indicating largely unbiased forecasts. Residuals follow a symmetric distribution around zero (Figure~\ref{fig:residuals_hist}) with a mean of 0.013, standard deviation of 0.18 and a maximum absolute deviation below 0.5 units, which shows that outliers are rare and that the model avoids severe overshooting of the true value.
 
-\subsection{Machine Learning Discussion}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/pred_vs_actual.png}
+\caption{Predicted versus observed values. The alignment with the diagonal illustrates the consistent accuracy of XGBoost.}
+\label{fig:pred_vs_actual}
+\end{figure}
 
-This subsection discusses the main design decisions, benefits, and limitations of the machine learning component integrated into the proposed CPS architecture. The discussion focuses on the trade-offs between predictive performance and system safety, as well as on the strategies adopted to reduce bias and improve robustness in safety-critical operating scenarios.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/residuals_hist.png}
+\caption{Histogram of residuals computed from \texttt{predictions.csv}. Most errors cluster near zero, with little mass above 0.2 units.}
+\label{fig:residuals_hist}
+\end{figure}
 
-\subsubsection{Initial Approach and Identified Limitations}
+\subsection{Case Study: Dynamic Event}
+Figure~\ref{fig:ts_overlay} shows how the model responds to abrupt changes. Around 11 January, the observed volume jumps by 0.33 units in a single day. The learned model captures that increase almost immediately and keeps tracking the overall level in the following days, whereas persistence lags behind by simply repeating the previous day's value. This behaviour demonstrates that the regression effectively captures the physical displacement caused by meteorological inputs while preserving the reservoir’s inertia.
 
-The initial machine learning approach aimed to capture historical water level behaviour, with a particular focus on seasonal patterns. Although this baseline model achieved reasonable predictive performance on past data, it revealed important limitations. In particular, it showed a strong bias towards seasonality and limited sensitivity to rare but safety-critical situations, such as extreme low water level conditions associated with dry risk events, since these events were underrepresented in the training dataset.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/ts_overlay.png}
+\caption{Time series of observed and predicted values. The learned forecast closely follows the mid-January oscillation with minimal delay.}
+\label{fig:ts_overlay}
+\end{figure}
 
-\subsubsection{Safety-Oriented Design Decisions}
+The feature importances in Figure~\ref{fig:feature_importances} confirm the delta-learning strategy: the model prioritizes the previous day’s and afternoon’s volumes plus afternoon temperature (in Celsius), followed by other lagged volumes, minimum temperature, and forecasted temperature/precipitation features. These physical signals help differentiate the response to the climate under critical moments while the baseline simply memorizes the last available reading.
 
-Within the context of Cyber-Physical Systems and IoT, prediction errors may have direct physical consequences. In dam management scenarios, underestimating critical conditions can compromise operational safety and, in extreme cases, lead to catastrophic outcomes. For this reason, the machine learning component was deliberately redesigned following a safety-oriented approach, prioritizing robustness and conservative behaviour rather than purely maximizing predictive accuracy.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.75\textwidth]{figures/feature_importances.png}
+\caption{Top feature importances for the XGBoost model. Volume lags and late-afternoon temperature lead, supporting the physics-informed delta learning heuristic.}
+\label{fig:feature_importances}
+\end{figure}
 
-\subsubsection{Synthetic Data and Safety-Performance Trade-off}
+\subsection{Comparative Visualizations}
+Three additional visualizations illustrate robustness and sensitivity beyond the aggregate metrics:
 
-One of the main challenges identified was the limited availability of real-world data representing rare and low-frequency events. To address this issue, synthetic data generation techniques were used to enrich the training dataset with safety-critical scenarios. This strategy reduced the model's dependence on dominant seasonal patterns and increased its sensitivity to dry risk conditions. As a result, the model adopted a more cautious predictive behaviour, supporting safer decision-making within the CPS. As expected, this design choice introduced a trade-off between system safety and predictive performance. By explicitly modeling rare events during training, the system becomes better prepared to support operators in high-risk situations, even when historical data alone is insufficient to fully capture such conditions.
+\begin{itemize}
+\item \textbf{Comparative Stress Test}: exposes the trajectory of the learned model, the previous version and the persistence baseline during an extreme drought scenario, including a threshold around 20\% capacity. Figure~\ref{fig:comparative_stress} shows that the physics-aware model signals the drop much earlier while the legacy options remain on the wrong side of the threshold.
+\item \textbf{Physics Blindness Test}: plots the predicted daily change (delta) versus temperature for the two trained regressors. The physics-aware XGBoost adapts its prediction upward as heat increases, whereas the older model stays largely flat; this contrast is captured in Figure~\ref{fig:physics_blind_test}.
+\item \textbf{Scenario Battle}: compares the predicted deltas for both models under three critical situations (normal day, heatwave/drought, heavy storm). Figure~\ref{fig:model_decision_making} makes it explicit that the new model adjusts per scenario (slowing inflow under heat, anticipating flooding under storms) while the older regression lacks such sensitivity.
+\end{itemize}
 
-\subsubsection{Interpretation of Performance Degradation}
+These visualizations complement the average metrics described earlier and reinforce the “physics-aware” strategy: the expanded model family not only shrinks aggregated error but also reacts intelligently across stress-testing, temperature shifts and scenario-specific decision-making.
 
-A degradation in predictive performance was observed when evaluating the model using the available test dataset. This outcome was anticipated, since the test data originates from the same dam and therefore follows seasonal dynamics similar to those present in the original training data. By reducing its reliance on these seasonal correlations, the model sacrifices performance on familiar patterns in exchange for improved robustness under critical operating conditions. From a CPS perspective, this behaviour is desirable, as it reduces the likelihood of overly optimistic predictions in scenarios characterized by uncertainty and environmental variability.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/comparative_stress.png}
+\caption{Stress-test trajectory comparing predictions from the physics-aware model, the earlier standard model, and the persistence baseline under prolonged drought. The critical 20\% threshold highlights the earlier warning provided by the new model.}
+\label{fig:comparative_stress}
+\end{figure}
 
-\subsubsection{Alignment with CPS and IoT Principles}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/physics_blind_test.png}
+\caption{Physics Blindness Test: the delta predicted by each model as temperature increases. The new model reacts to the rising heat (physics-aware behavior) while the older model remains mostly flat.}
+\label{fig:physics_blind_test}
+\end{figure}
 
-The observed trade-offs reflect a conscious engineering decision aligned with core CPS and IoT principles, where safety, reliability, and risk mitigation take precedence over maximum statistical performance. In safety-critical infrastructures, conservative predictions are often preferable to highly optimized models that may fail under rare but severe conditions.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/model_decision_making.png}
+\caption{Scenario Battle: predicted daily changes for three critical scenarios and for both model versions. The physics-aware model adjusts predictions per scenario, whereas the legacy model is less responsive.}
+\label{fig:model_decision_making}
+\end{figure}
+
+\subsection{Limitations and Next Steps}
+The current experiment does not include risk classes or event-specific metrics, so the evaluation remains centered on global average errors. Future steps should define operating classes (dry, normal, overflow risk) and compute confusion matrices to quantify critical false negatives. We also need to replace persistence-based weather inputs with real forecast feeds and validate the model on other reservoirs to ensure generalization. Finally, automating the pipeline that refreshes \texttt{predictions.csv} and reruns \texttt{generate\_plots.py} would keep the figures and tables cited in this section synchronized with new data.
