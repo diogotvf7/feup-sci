@@ -47,6 +47,8 @@ The XGBoost model delivers clear gains: MAE drops from $0.215$ to $0.150$ and RM
 
 \begin{table}
 \centering
+\caption{Aggregated metrics per model on the January–February 2024 test window.}
+\label{tab:metrics}
 \begin{tabular}{lllll}
 \toprule
 \textbf{Model} & \textbf{MAE} & \textbf{RMSE} & \textbf{MAPE (\%)} & $R^{2}$ \\
@@ -55,9 +57,6 @@ XGBoost & $0.150$ & $0.182$ & $1.484$ & $0.930$ \\
 Persistence & $0.215$ & $0.238$ & $2.143$ & $0.882$ \\
 \bottomrule
 \end{tabular}
-\vspace{0.5mm}
-\caption{Aggregated metrics per model on the January–February 2024 test window.}
-\label{tab:metrics}
 \end{table}
 
 The scatter plot in Fig.~\ref{fig:pred_vs_actual} confirms that XGBoost predictions stay close to the diagonal, indicating largely unbiased forecasts. Residuals follow a symmetric distribution around zero (Fig.~\ref{fig:residuals_hist}) with a mean of $0.013$, standard deviation of $0.18$ and a maximum absolute deviation below $0.5$ units, which shows that outliers are rare and that the model avoids severe overshooting of the true value.
