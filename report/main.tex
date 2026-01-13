@@ -27,7 +27,7 @@
 %
 \begin{document}
 %
-\title{Water Dam Monitoring with Weather Integration}
+\title{Hydroelectric Dam Monitoring with Weather Integration}
 %
 %\titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
@@ -54,16 +54,16 @@
 \maketitle              % typeset the header of the contribution
 %
 \begin{abstract}
-Hydroelectric dams are crucial infrastructures for water supply and electricity generation but face significant operational risks from extreme weather, including flooding during heavy rainfall and reduced energy production during droughts. Current monitoring methods are often manual or outdated, requiring the development of smart, autonomous, and remote solutions. This work presents a Cyber-Physical System (CPS) and Internet of Things (IoT) framework designed for real-time dam monitoring and control. The proposed architecture is mapped to a 5-layer IoT stack and the 5C CPS functional model, using Arduino Nano ESP32 controllers for perception and a Raspberry Pi gateway running Node-RED, RabbitMQ, and InfluxDB. Data management follows an Atomic Messaging philosophy via the MQTT protocol to ensure high scalability and time-series optimization. To enhance operational intelligence, a Gradient Boosting Machine (GBM) model was integrated to predict daily inflow and outflow trends using historical hydrological data and weather forecasts. We implemented a proof-of-concept prototype that successfully validates decision support logic via a real-time Node-RED dashboard. The results provide a robust and secure foundation for adapting integrated CPS technologies to large-scale hydroelectric environments.
+Hydroelectric dams are crucial infrastructure for water supply and electricity generation but face significant operational risks from extreme weather, including flooding during heavy rainfall and reduced energy production during droughts. Current monitoring methods are often manual or outdated, requiring the development of smart, autonomous, and remote solutions. This work presents a Cyber-Physical System and Internet of Things framework designed for real-time dam monitoring and control. The proposed architecture is mapped to a 5-layer IoT stack and the 5C CPS functional model, using Arduino Nano ESP32 controllers for perception and a gateway running Node-RED, RabbitMQ, and InfluxDB. Data management follows an Atomic Messaging philosophy via the MQTT protocol to ensure high scalability and time-series optimization. To enhance operational intelligence, a Gradient Boosting Machine model was integrated to predict daily reservoir water levels using historical hydrological data and weather forecasts. The implemented proof-of-concept prototype successfully validates the decision-support logic via a real-time Node-RED dashboard. The results provide a robust and secure foundation for adapting integrated CPS technologies to large-scale hydroelectric environments.
 \keywords{Cyber-Physical Systems (CPS)  \and Internet of Things (IoT) \and Hydroelectric Dam Monitoring.}
 \end{abstract}
 
 
 \input{Chapters/Chapter1}
-\include{Chapters/Chapter2}
-\include{Chapters/Chapter3}
-\include{Chapters/Chapter4}
-\include{Chapters/Chapter5}
+\input{Chapters/Chapter2}
+\input{Chapters/Chapter3}
+\input{Chapters/Chapter4}
+\input{Chapters/Chapter5}
 \input{Chapters/Chapter6}
 
 
@@ -72,6 +72,5 @@ Hydroelectric dams are crucial infrastructures for water supply and electricity 
 % References will then be sorted and formatted in the correct style.
 \bibliographystyle{splncs04}
 \bibliography{bibliography}
-
 
 \end{document}

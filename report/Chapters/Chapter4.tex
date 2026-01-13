@@ -1,41 +1,130 @@
-
-\section{Evaluation and Results}
+\section{Evaluation and Results}\label{sec:eval-results}
 
 \subsection{Testing Methodology}
 
-In order to assess the performance and effectiveness of the proposed system, a mockup model was developed Figure~\ref{fig:model}. This model intends to simulate real-world conditions and provide a controlled environment for testing various aspects of the system.
+In order to assess the performance and effectiveness of the proposed system, a mockup model was developed, shown in Fig.~\ref{fig:model}. This model intends to simulate real-world conditions and provide a controlled environment for testing various aspects of the system.
 
-The model consisted of two boxes: 1) the dam reservoir (upper box) and 2) the downstream river (lower box). The reservoir box was filled with water to simulate different water levels, while the downstream river box was used to observe the effects of water release from the dam.
-The dam reservoir box had a hose that allowed water to flow into the downstream river box while being controlled by a water flow sensor. Our group intended to use a flow gate actuator to control the water flow, but unfortunately, it was not available. Therefore, the water flow was manually adjusted by inserting a piece on the hose to simulate the gate's partial opening and closing.
-The dam reservoir box also had an ultrasonic distance sensor to measure the water level, which provided real-time data for analysis. Due to water fluctuations, and consequent reflections, the ultrasonic distance sensor readings were quite noisy. A possible pratical solution to this problem would be to place a floating platform on the water surface to provide a more stable reflection point for the ultrasonic distance sensor.
-Both the water flow sensor and the ultrasonic distance sensor were connected to an Arduino board, placed in the exterior of the dam reservoir box, to collect and transmit data to a computer for further analysis.
+The model consisted of two boxes: (i) the dam reservoir (upper box) and (ii) the downstream river (lower box). The reservoir box was filled with water to simulate different water levels, while the downstream river box was used to observe the effects of water release from the dam.
+The dam reservoir box had a hose that allowed water to flow into the downstream river box while being tracked by a water flow sensor. The original plan was to use a flow gate actuator to control the water flow, but it was not available, unfortunately. Therefore, the water flow was manually adjusted by inserting a piece on the hose to simulate the gate's partial opening and closing.
+The dam reservoir box also had an ultrasonic distance sensor to measure the water level, providing the real-time measurements for analysis. Due to water fluctuations, and consequent reflections, the ultrasonic distance sensor readings were quite noisy. A possible pratical solution to this problem would be to place a floating platform on the water surface to provide a more stable reflection point for the ultrasonic distance sensor.
+Both the water flow sensor and the ultrasonic distance sensor were connected to an Arduino board, placed in the exterior of the dam reservoir box, to collect and transmit data to the gateway for further analysis.
 
 This setup allowed us to simulate dam operations and gather data for evaluating the system's performance in a controlled environment.
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.9\textwidth]{figures/model.png}
-\caption{Testing Model}
-\label{fig:model}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/model.png}
+    \caption{Testing model serving as a proof-of-concept for the application.}
+    \label{fig:model}
 \end{figure}
 
 \subsection{Real-world application}
-Our system was designed to address challenges with dam systems management, by providing extra analytics to support decisions and prevent failures.
+Our system was designed to address challenges with dam systems management, by providing additional analytics to support decisions and prevent failures.
 
-A primary concern in dam operations is the risk of overflow. To mitigate this the system uses multiple sensors, such as pluviometers to gain an accurate insight into the exact quantity of rain, compared to weather estimations, the area is receiving.
-Inflows from rivers can also be monitored through the use of a water flow sensor placed at the dam's main water entrance or if the only inflow source is another dam, the system can use flow measurements from the upstream's dam gate as an approximate value.
-This gives us valuable insight and allows the model to have an improved performance based on the quantity and sources of data and provides dam technicians with real-time, comprehensive insights into reservoir status.
+A primary concern in dam operations is the risk of overflow. To mitigate this, the system uses multiple sensors, such as pluviometers, in this case simulated, to gain an accurate insight into the exact rain volume, compared to weather estimations.
+Although not used for the current implementation, inflows from rivers can also be monitored through the use of a water flow sensor placed at the dam's main water entrance or from the upstream's dam gate.
+This gives us valuable insights and allows the model to have an improved performance, providing dam technicians with real-time, comprehensive insights into reservoir status.
 
 For optimizing energy production, the system requires two types of sensors and one actuator: a water flow sensor to monitor outflow, a dynamo equipped with a sensor to measure generated electricity, and a flow gate actuator. 
 This configuration enables remote and automated control of energy production, allowing the system to adjust operations dynamically in response to changing conditions or to be remotelly actuated by dam technicians.
 
-This would allow our system to provide analytics for technicians to take informed decisions and a way to act on this information in an entirely remote manner helping fix another common issue in dams, their remote or hard to access locations.
+This would allow our system to provide analytics for technicians to take informed decisions and a way to act on this information in an entirely remote manner, helping fix another common issue in dams, their remote or hard to access locations.
 
 \subsection{Result Analysis}
-The full prototype functioned as expected, providing real-time data within the expected latency constraints. Unfortunately, the lack of access the a flow gate actuator made it impossible to extract accurate measures and evaluate our model extensively. As such, we'll focus this section on the details of the experimental setup, as well as how the sensor input was reflected in the UI.
+The full prototype functioned as expected, providing real-time data within the expected latency constraints. Unfortunately, the lack of access to a flow gate actuator limited the evaluation scope. As such, this section focuses on the details of the experimental setup, as well as how the sensor inputs were reflected in the Node-RED interface. In addition, it details the results of the trained ML model.
 
-The ultrasonic distance sensor used to measure the water level had a measurement error of $\pm$0.5 centimeters which, given the height of the box used, resulted in an fluctuation of approximately $\pm7\%$ with regards to the current water capacity of the dam. This led to some impact in our inference results, as the inference model often received a drastic variation in the readings of that particular sensor. In a real-world system, this margin of error would be negligible, as dams are usually several dozen meters in height - 3 orders of magnitude above the measurement error of our instruments - meaning that the fluctuation in dam capacity would be considerably smaller. The retrieved results were consistent, except for spurious readings with a particularly large fluctuation, and the real-time updates ensured a dam operator could stay informed regarding the current state of the dam's used capacity. The dashboard worked as expected, providing valuable insights into the dam, complete with a functioning color code for fast visual identification.
+\subsubsection{Prototype Results}
+The ultrasonic distance sensor used to measure the water level had a measurement error of $\pm$0.5 centimeters which, given the height of the box used, resulted in a fluctuation of approximately $\pm7\%$ with regards to the current water capacity of the dam. This led to some impact in our inference results, as the model often received a drastic variation in the readings of that particular sensor. In a real-world system, this margin of error would be negligible, as dams are usually several dozen meters in height --- 3 orders of magnitude above the measurement error of our instruments --- meaning that the fluctuation in dam capacity would be considerably smaller. The retrieved results were consistent, except for spurious readings with a particularly large fluctuation, and the real-time updates ensured a dam operator could stay informed regarding the current state of the dam's used capacity. The dashboard worked as expected, providing valuable insights into the dam, complete with a functioning color code for fast visual identification.
 
-Due to resource constraints we could not simulate different pluviosity conditions, nor different upstream inflows. While this could be circumvented using artificial data, we decided against it, as it would defeat the purpose of having a physical model to evaluate our system. Further work on this prototype would require simulating these conditions, as well as extreme cases - i.e floods, monsoons, emergencies in upstream dams - to ensure our model was resilient in these situations.
 
-Given the displayed performance, specially with regards to latency in real-time updates, we consider our model adequately validates the feasibility of our solution. While a real implementation would require far more testing and validation than what we were able to perform, we managed to prove the functionality of the core concept, as well as validate telemetry and inference.
+Given the difficulty of simulating different climate conditions in real-time for the prototype, these were not performed. Further work on this prototype would require simulating these conditions, as well as extreme cases --- i.e floods, monsoons, emergencies in upstream dams --- to ensure its resiliency in these situations. However, we performed a small study directly on the trained ML models, which gave interesting insights.
+
+\subsubsection{ML Model Results}
+Evaluation of model relies on the daily split spanning 1 January to 19 February 2024, with the learned XGBoost model trained on a broader historical window and the persistence baseline defined based on each previous day's reading. Predictions are contrasted against the measured volumes to compute MAE, RMSE, MAPE and $R^2$ per model, ensuring that the performance comparison isolates the effect of the modeling strategy rather than dataset selection. This test window is representative of both stable periods and short-lived spikes, so the diagnostics incorporate both global error summaries and diagnostic plots to verify calibration.
+
+\paragraph{Quantitative Analysis}
+The XGBoost model delivers clear gains: MAE drops from $0.215$ to $0.150$ and RMSE falls from $0.238$ to $0.182$, representing relative reductions of roughly $30\%$ and $25\%$. MAPE decreases to $1.484\%$ (from $2.143\%$), and $R^2$ improves from $0.882$ to $0.930$, approaching the variance-explained ceiling. These values appear in Table~\ref{tab:metrics}.
+
+\begin{table}
+\centering
+\begin{tabular}{lllll}
+\toprule
+\textbf{Model} & \textbf{MAE} & \textbf{RMSE} & \textbf{MAPE (\%)} & $R^{2}$ \\
+\midrule
+XGBoost & $0.150$ & $0.182$ & $1.484$ & $0.930$ \\
+Persistence & $0.215$ & $0.238$ & $2.143$ & $0.882$ \\
+\bottomrule
+\end{tabular}
+\vspace{0.5mm}
+\caption{Aggregated metrics per model on the January–February 2024 test window.}
+\label{tab:metrics}
+\end{table}
+
+The scatter plot in Fig.~\ref{fig:pred_vs_actual} confirms that XGBoost predictions stay close to the diagonal, indicating largely unbiased forecasts. Residuals follow a symmetric distribution around zero (Fig.~\ref{fig:residuals_hist}) with a mean of $0.013$, standard deviation of $0.18$ and a maximum absolute deviation below $0.5$ units, which shows that outliers are rare and that the model avoids severe overshooting of the true value.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{figures/pred_vs_actual.png}
+\caption{Predicted against observed reservoir water level values. The alignment with the diagonal illustrates the consistent accuracy of the trained XGBoost.}
+\label{fig:pred_vs_actual}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{figures/residuals_hist.png}
+\caption{Histogram of residuals computed from the predictions of the models. Most errors cluster near zero, with little mass above 0.2 units.}
+\label{fig:residuals_hist}
+\end{figure}
+
+\paragraph{Case Study: Dynamic Event}
+Figure~\ref{fig:ts_overlay} shows how the model responds to abrupt changes. Around 11 January, the observed volume jumps by $0.33$ units in a single day. The learned model captures that increase almost immediately and keeps tracking the overall level in the following days, whereas the baseline lags behind by simply repeating the previous day's value. This behaviour demonstrates that the regression effectively captures the physical displacement caused by meteorological inputs while preserving the reservoir's inertia.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{figures/ts_overlay.png}
+\caption{Time series of observed and predicted values. The learned forecast closely follows the mid-January oscillation with minimal delay.}
+\label{fig:ts_overlay}
+\end{figure}
+
+The feature importances in Fig.~\ref{fig:feature_importances} confirm the delta-learning strategy: the model prioritizes the previous day's and afternoon's volumes, combined with the afternoon temperature, followed by other lagged volumes, minimum temperature, and forecasted temperature and precipitation features. These physical signals help differentiate the response to the climate under critical moments while the baseline simply uses the last available reading.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{figures/feature_importances.png}
+\caption{Top feature importances for the XGBoost model. Volume lags and late-afternoon temperature lead, supporting the physics-informed delta learning heuristic.}
+\label{fig:feature_importances}
+\end{figure}
+
+\paragraph{Comparative Visualizations}
+Three additional visualizations illustrate robustness and sensitivity beyond the aggregate metrics:
+
+\begin{itemize}
+\item \textbf{Comparative Stress Test}: exposes the trajectory of the learned model, the previous version and the persistence baseline during an extreme drought scenario, including a threshold around 20\% capacity. Figure~\ref{fig:comparative_stress} shows that the physics-aware model signals the drop much earlier while the legacy options remain on the wrong side of the threshold.
+\item \textbf{Physics Blindness Test}: plots the predicted daily change (delta) agains the temperature for the two trained regressors. The physics-aware XGBoost adapts its prediction upward as heat increases, whereas the older model stays largely flat; this contrast is captured in Fig.~\ref{fig:physics_blind_test}.
+\item \textbf{Scenario Battle}: compares the predicted deltas for both models under three critical situations (normal day, heatwave/drought, heavy storm). Figure~\ref{fig:model_decision_making} makes it explicit that the new model adjusts per scenario (slowing inflow under heat, anticipating flooding under storms), while the older regression lacks such sensitivity.
+\end{itemize}
+
+These visualizations complement the average metrics described earlier and reinforce the “physics-aware” strategy: the expanded model family not only shrinks aggregated error but also reacts intelligently across stress-testing, temperature shifts and scenario-specific decision-making.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{figures/comparative_stress.png}
+\caption{Stress-test trajectory comparing predictions from the physics-aware model, the earlier standard model, and the persistence baseline under prolonged drought. The critical 20\% threshold highlights the earlier warning provided by the new model.}
+\label{fig:comparative_stress}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{figures/physics_blind_test.png}
+\caption{Physics Blindness Test: the delta predicted by each model as temperature increases. The new model reacts to the rising heat (physics-aware behavior) while the older model remains mostly flat.}
+\label{fig:physics_blind_test}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\textwidth]{figures/model_decision_making.png}
+\caption{Scenario Battle: predicted daily changes for three critical scenarios and for both model versions. The physics-aware model adjusts predictions per scenario, whereas the legacy model is less responsive.}
+\label{fig:model_decision_making}
+\end{figure}
+
+Given the displayed performance of our solution, regarding the latency in real-time updates, and the performance of our ML model, we consider that our prototype adequately validates the feasibility of our solution. While a real implementation would require far more testing and validation, this solution managed to prove the functionality of the core concept, as well as validate telemetry and inference.
