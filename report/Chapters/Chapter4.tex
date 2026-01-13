@@ -1,7 +1,23 @@
 
 \section{Evaluation and Results}
+
 \subsection{Testing Methodology}
-% Description of how the system was tested.
+
+In order to assess the performance and effectiveness of the proposed system, a mockup model was developed Figure~\ref{fig:model}. This model intends to simulate real-world conditions and provide a controlled environment for testing various aspects of the system.
+
+The model consisted of two boxes: 1) the dam reservoir (upper box) and 2) the downstream river (lower box). The reservoir box was filled with water to simulate different water levels, while the downstream river box was used to observe the effects of water release from the dam.
+The dam reservoir box had a hose that allowed water to flow into the downstream river box while being controlled by a water flow sensor. Our group intended to use a flow gate actuator to control the water flow, but unfortunately, it was not available. Therefore, the water flow was manually adjusted by inserting a piece on the hose to simulate the gate's partial opening and closing.
+The dam reservoir box also had an ultrasonic distance sensor to measure the water level, which provided real-time data for analysis. Due to water fluctuations, and consequent reflections, the ultrasonic distance sensor readings were quite noisy. A possible pratical solution to this problem would be to place a floating platform on the water surface to provide a more stable reflection point for the ultrasonic distance sensor.
+Both the water flow sensor and the ultrasonic distance sensor were connected to an Arduino board, placed in the exterior of the dam reservoir box, to collect and transmit data to a computer for further analysis.
+
+This setup allowed us to simulate dam operations and gather data for evaluating the system's performance in a controlled environment.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/model.webp}
+\caption{Testing Model}
+\label{fig:model}
+\end{figure}
 
 \subsection{Real-world application}
 Our system was designed to address challenges with dam systems management, by providing extra analytics to support decisions and prevent failures.
